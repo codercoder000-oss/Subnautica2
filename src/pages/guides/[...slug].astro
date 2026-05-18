@@ -1,8 +1,10 @@
 ---
-// 主线流程详情页
+// 主线流程详情页 - 重新设计：更专业的攻略站风格
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import RelatedContent from '@/components/RelatedContent.astro';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
@@ -13,68 +15,95 @@ export async function getStaticPaths() {
 }
 
 const { guide } = Astro.props;
-const { Content } = await render(guide);
+const { Content, headings } = await render(guide);
 const data = guide.data;
+
+// 相关攻略
+const allGuides = await getCollection('guides');
+const related = allGuides
+  .filter((g) => g.id !== guide.id && g.data.chapter === data.chapter)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 6)
+  .map((g) => ({ href: `/guides/${g.id}/`, title: g.data.title, subtitle: g.data.chapter }));
 
 const SPOILER_LABELS = {
   none: '无剧透',
   minor: '轻微剧透',
   major: '重要剧情',
 };
+
+const SPOILER_COLORS = {
+  none: 'bg-green-900/30 text-green-300 border-green-700',
+  minor: 'bg-yellow-900/30 text-yellow-300 border-yellow-700',
+  major: 'bg-red-900/30 text-red-300 border-red-700',
+};
 ---
 
 <BaseLayout title={data.title} description={data.description}>
-  <article class="max-w-3xl mx-auto px-4 py-8">
-    <nav class="text-sm text-cyan-200/60 mb-4">
-      <a href="/guides/" class="hover:text-cyan-glow">主线流程</a> / {data.chapter}
+  <article class="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
+    <!-- 面包屑 -->
+    <nav class="text-sm text-cyan-200/50 mb-6 flex items-center gap-2">
+      <a href="/guides/" class="hover:text-cyan-glow transition">主线流程</a>
+      <span class="text-cyan-200/30">/</span>
+      <span class="text-cyan-200/70">{data.chapter}</span>
     </nav>
 
-    <div class="mb-4 flex flex-wrap gap-2 items-center">
-      <VersionBadge
-        gameVersion={data.gameVersion}
-        verifiedAt={data.verifiedAt}
-        outdated={data.outdated}
-        outdatedNote={data.outdatedNote}
-      />
-      <span class:list={[
-        'text-xs px-3 py-1 rounded',
-        data.spoilerLevel === 'major' ? 'bg-red-900/50 text-red-300'
-        : data.spoilerLevel === 'minor' ? 'bg-yellow-900/50 text-yellow-300'
-        : 'bg-deep-700 text-cyan-200'
-      ]}>
-        {SPOILER_LABELS[data.spoilerLevel]}
-      </span>
-      {data.estimatedTime && (
-        <span class="text-xs px-3 py-1 rounded bg-deep-700 text-cyan-200">
-          ⏱️ {data.estimatedTime}
-        </span>
-      )}
-    </div>
+    <!-- 标题区 -->
+    <header class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl text-cyan-glow leading-tight mb-3">
+        {data.title}
+      </h1>
+      <p class="text-lg text-cyan-200/70 leading-relaxed">{data.description}</p>
 
-    <header class="mb-6">
-      <h1 class="font-display text-3xl text-cyan-glow">{data.title}</h1>
-      <p class="text-lg text-cyan-200/70 mt-2">{data.description}</p>
+      <!-- 元信息条 -->
+      <div class="flex flex-wrap items-center gap-3 mt-4">
+        <VersionBadge
+          gameVersion={data.gameVersion}
+          verifiedAt={data.verifiedAt}
+          outdated={data.outdated}
+          outdatedNote={data.outdatedNote}
+        />
+        <span class:list={[
+          'text-xs px-3 py-1 rounded-full border',
+          SPOILER_COLORS[data.spoilerLevel]
+        ]}>
+          {SPOILER_LABELS[data.spoilerLevel]}
+        </span>
+        {data.estimatedTime && (
+          <span class="text-xs px-3 py-1 rounded-full bg-deep-700 border border-deep-600 text-cyan-200/70">
+            ⏱️ {data.estimatedTime}
+          </span>
+        )}
+      </div>
     </header>
 
     <!-- 进度勾选 -->
-    <div class="mb-6 p-4 bg-deep-800 border border-deep-600 rounded-lg">
-      <label class="flex items-center gap-2 cursor-pointer">
+    <div class="mb-8 p-4 bg-deep-800/50 border border-deep-600 rounded-xl backdrop-blur">
+      <label class="flex items-center gap-3 cursor-pointer group">
         <input
           type="checkbox"
-          class="progress-check"
+          class="progress-check w-5 h-5 rounded border-2 border-cyan-glow/50 bg-transparent checked:bg-cyan-glow checked:border-cyan-glow transition"
           data-guide-id={guide.id}
         />
-        <span>我已完成此节点</span>
+        <span class="text-sm text-cyan-200/80 group-hover:text-cyan-glow transition">
+          标记为已完成
+        </span>
       </label>
     </div>
 
-    <section class="prose prose-invert max-w-none">
+    <!-- 目录（仅当 headings 足够多时显示） -->
+    <TableOfContents headings={headings} />
+
+    <!-- 正文 -->
+    <section class="prose prose-invert prose-cyan max-w-none mt-8">
       <Content />
     </section>
+
+    <!-- 相关攻略 -->
+    <RelatedContent items={related} title="同章节攻略" />
   </article>
 
   <script>
-    // 进度持久化
     const KEY = 'sub2:guide-progress';
     const load = (): Record<string, boolean> => {
       try { return JSON.parse(localStorage.getItem(KEY) ?? '{}'); }

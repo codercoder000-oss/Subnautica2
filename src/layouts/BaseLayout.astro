@@ -59,18 +59,18 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
   </head>
   <body class="bg-deep-900 text-cyan-50 min-h-screen flex flex-col">
     <!-- 顶部导航 -->
-    <header class="sticky top-0 z-50 bg-deep-800/90 backdrop-blur border-b border-deep-600">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-6">
-        <a href="/" class="font-display font-bold text-cyan-glow text-lg whitespace-nowrap">
-          {SITE.title}
+    <header class="sticky top-0 z-50 bg-deep-800/95 backdrop-blur-md border-b border-deep-600/50">
+      <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-4">
+        <a href="/" class="font-display font-bold text-cyan-glow text-base whitespace-nowrap hover:opacity-80 transition">
+          🌊 {SITE.title}
         </a>
-        <nav class="flex-1 overflow-x-auto hidden lg:block">
-          <ul class="flex items-center gap-1 text-sm">
+        <nav class="flex-1 overflow-x-auto hidden lg:block scrollbar-hide">
+          <ul class="flex items-center gap-0.5 text-[13px]">
             {NAV.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="px-3 py-1.5 rounded hover:bg-deep-600 hover:text-cyan-glow transition whitespace-nowrap inline-block"
+                  class="px-2.5 py-1.5 rounded-md hover:bg-deep-600/70 hover:text-cyan-glow transition whitespace-nowrap inline-block text-cyan-100/80"
                 >
                   {item.label}
                 </a>
@@ -80,17 +80,21 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
         </nav>
         <a
           href="/search/"
-          class="hidden lg:inline-block text-sm px-3 py-1.5 rounded bg-deep-600 hover:bg-cyan-glow hover:text-deep-900 transition"
+          class="hidden lg:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-deep-700 border border-deep-600 hover:border-cyan-glow hover:text-cyan-glow transition"
           aria-label="搜索"
         >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
           搜索
         </a>
         <MobileNav />
       </div>
       <!-- 版本提示条 -->
-      <div class="bg-deep-700 border-t border-deep-600 text-xs text-cyan-200/70 text-center py-1">
-        当前游戏版本：<span class="text-cyan-glow font-mono">{SITE.gameVersion}</span>
-        ・更新于 {SITE.gameVersionDate}
+      <div class="bg-deep-700/50 border-t border-deep-600/30 text-[11px] text-cyan-200/50 text-center py-0.5">
+        游戏版本 <span class="text-cyan-glow/80 font-mono">{SITE.gameVersion}</span>
+        <span class="mx-1.5 text-deep-600">|</span>
+        {SITE.gameVersionDate}
       </div>
     </header>
 

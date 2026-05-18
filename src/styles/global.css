@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
-/* 深海主题色：蓝黑为主，青色点缀 */
+/* 深海主题色系 */
 @theme {
   --color-deep-900: #050b1a;
   --color-deep-800: #0a1628;
   --color-deep-700: #102339;
   --color-deep-600: #18324f;
+  --color-deep-500: #1e3f5f;
   --color-abyss: #061325;
   --color-cyan-glow: #4dd0e1;
+  --color-cyan-dim: #26a69a;
   --color-warning: #ff9800;
   --color-danger: #f44336;
   --color-safe: #4caf50;
@@ -21,13 +23,160 @@ html {
   color: #e0f7fa;
   font-family: var(--font-body);
   scroll-behavior: smooth;
+  font-size: 15px;
 }
 
 body {
   min-height: 100vh;
+  line-height: 1.7;
 }
 
-/* 剧透遮罩样式 */
+/* ===== 排版增强 ===== */
+
+/* 文章正文 prose 覆盖 */
+.prose {
+  --tw-prose-body: #b2dfdb;
+  --tw-prose-headings: #4dd0e1;
+  --tw-prose-links: #4dd0e1;
+  --tw-prose-bold: #e0f7fa;
+  --tw-prose-counters: #4dd0e1;
+  --tw-prose-bullets: #26a69a;
+  --tw-prose-hr: #18324f;
+  --tw-prose-quotes: #80cbc4;
+  --tw-prose-quote-borders: #26a69a;
+  --tw-prose-code: #4dd0e1;
+  --tw-prose-pre-code: #b2dfdb;
+  --tw-prose-pre-bg: #0a1628;
+  --tw-prose-th-borders: #18324f;
+  --tw-prose-td-borders: #102339;
+}
+
+.prose h2 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #18324f;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+}
+
+.prose h3 {
+  margin-top: 1.8rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #80cbc4;
+}
+
+.prose table {
+  border: 1px solid #18324f;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.prose th {
+  background: #0a1628;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.6rem 1rem;
+}
+
+.prose td {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid #102339;
+}
+
+.prose tr:hover td {
+  background: rgba(77, 208, 225, 0.03);
+}
+
+.prose code:not(pre code) {
+  background: #102339;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.prose strong {
+  color: #e0f7fa;
+  font-weight: 600;
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+.prose a:hover {
+  color: #80deea;
+}
+
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.prose ul > li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #26a69a;
+}
+
+.prose ol > li::marker {
+  color: #4dd0e1;
+  font-weight: 700;
+}
+
+.prose blockquote {
+  border-left: 3px solid #26a69a;
+  background: rgba(38, 166, 154, 0.05);
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 8px 8px 0;
+}
+
+/* ===== 步骤列表样式 ===== */
+.prose ol > li {
+  padding-left: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+/* ===== 卡片悬浮效果 ===== */
+.card-hover {
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(77, 208, 225, 0.08);
+}
+
+/* ===== 导航栏优化 ===== */
+header nav a {
+  position: relative;
+}
+
+header nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #4dd0e1;
+  transition: width 0.2s, left 0.2s;
+}
+
+header nav a:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+/* ===== 剧透遮罩 ===== */
 .spoiler {
   background: #000;
   color: #000;
@@ -43,13 +192,13 @@ body {
   color: inherit;
 }
 
-/* 攻击性等级颜色 */
+/* ===== 攻击性等级颜色 ===== */
 .aggression-passive { color: var(--color-safe); }
 .aggression-cautious { color: #ffeb3b; }
 .aggression-aggressive { color: var(--color-warning); }
 .aggression-lethal { color: var(--color-danger); }
 
-/* 恐惧症友好标签 */
+/* ===== 恐惧症标签 ===== */
 .phobia-tag {
   display: inline-block;
   padding: 2px 8px;
@@ -58,4 +207,56 @@ body {
   background: rgba(244, 67, 54, 0.15);
   color: #ffab91;
   border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* ===== 滚动条美化 ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050b1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #18324f;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #26a69a;
+}
+
+/* ===== 选中文字颜色 ===== */
+::selection {
+  background: rgba(77, 208, 225, 0.3);
+  color: #fff;
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* ===== 响应式优化 ===== */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  .prose h2 {
+    font-size: 1.15rem;
+  }
 }
