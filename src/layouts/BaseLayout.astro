@@ -1,6 +1,7 @@
 ---
 // 全站基础布局
 import { SITE, NAV } from '@/consts';
+import MobileNav from '@/components/MobileNav.astro';
 import '@/styles/global.css';
 
 interface Props {
@@ -63,7 +64,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
         <a href="/" class="font-display font-bold text-cyan-glow text-lg whitespace-nowrap">
           {SITE.title}
         </a>
-        <nav class="flex-1 overflow-x-auto">
+        <nav class="flex-1 overflow-x-auto hidden lg:block">
           <ul class="flex items-center gap-1 text-sm">
             {NAV.map((item) => (
               <li>
@@ -79,11 +80,12 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
         </nav>
         <a
           href="/search/"
-          class="text-sm px-3 py-1.5 rounded bg-deep-600 hover:bg-cyan-glow hover:text-deep-900 transition"
+          class="hidden lg:inline-block text-sm px-3 py-1.5 rounded bg-deep-600 hover:bg-cyan-glow hover:text-deep-900 transition"
           aria-label="搜索"
         >
           搜索
         </a>
+        <MobileNav />
       </div>
       <!-- 版本提示条 -->
       <div class="bg-deep-700 border-t border-deep-600 text-xs text-cyan-200/70 text-center py-1">

@@ -26,6 +26,7 @@ export const SITE = {
 // 主导航
 export const NAV = [
   { href: '/', label: '首页' },
+  { href: '/quickstart/', label: '新手入门' },
   { href: '/map/', label: '互动地图' },
   { href: '/creatures/', label: '生物图鉴' },
   { href: '/biomods/', label: 'Biomod 特性' },
@@ -34,6 +35,7 @@ export const NAV = [
   { href: '/vehicles/', label: '载具' },
   { href: '/guides/', label: '主线流程' },
   { href: '/tools/calculator/', label: '配方计算器' },
+  { href: '/tools/tech-tree/', label: '科技树' },
   { href: '/changelog/', label: '版本日志' },
 ] as const;
 

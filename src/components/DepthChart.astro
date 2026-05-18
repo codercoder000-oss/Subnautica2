@@ -1,0 +1,66 @@
+---
+// 深度分布图：可视化各群落的深度范围
+interface BiomeDepth {
+  name: string;
+  slug: string;
+  depthMin: number;
+  depthMax: number;
+  dangerLevel: number;
+}
+
+interface Props {
+  biomes: BiomeDepth[];
+}
+
+const { biomes } = Astro.props;
+
+// 找到最大深度用于缩放
+const maxDepth = Math.max(...biomes.map((b) => b.depthMax));
+const scale = (d: number) => (d / maxDepth) * 100;
+
+// 危险等级颜色
+const dangerColors = ['#4caf50', '#8bc34a', '#ffeb3b', '#ff9800', '#f44336'];
+---
+
+<div class="bg-deep-800 border border-deep-600 rounded-lg p-4">
+  <h3 class="font-display text-cyan-glow mb-4">深度分布图</h3>
+  <div class="relative">
+    <!-- 深度刻度 -->
+    <div class="absolute left-0 top-0 bottom-0 w-12 flex flex-col justify-between text-xs text-cyan-200/50 font-mono">
+      <span>0m</span>
+      <span>{Math.round(maxDepth * 0.25)}m</span>
+      <span>{Math.round(maxDepth * 0.5)}m</span>
+      <span>{Math.round(maxDepth * 0.75)}m</span>
+      <span>{maxDepth}m</span>
+    </div>
+
+    <!-- 群落条 -->
+    <div class="ml-14 space-y-2">
+      {biomes.map((b) => {
+        const top = scale(b.depthMin);
+        const height = scale(b.depthMax - b.depthMin);
+        const color = dangerColors[b.dangerLevel - 1] ?? dangerColors[4];
+        return (
+          <a
+            href={`/biomes/${b.slug}/`}
+            class="group flex items-center gap-3 hover:bg-deep-700 rounded px-2 py-1 transition"
+          >
+            <span class="w-24 text-sm truncate group-hover:text-cyan-glow">{b.name}</span>
+            <div class="flex-1 h-6 bg-deep-900 rounded relative overflow-hidden">
+              <div
+                class="absolute h-full rounded opacity-70 group-hover:opacity-100 transition"
+                style={`left:${top}%; width:${Math.max(height, 2)}%; background:${color};`}
+              />
+            </div>
+            <span class="text-xs text-cyan-200/50 font-mono w-24 text-right">
+              {b.depthMin}~{b.depthMax}m
+            </span>
+            <span class="text-xs" title={`危险等级 ${b.dangerLevel}`}>
+              {'⚠️'.repeat(b.dangerLevel)}
+            </span>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,187 @@
+---
+// 新手快速入门：一页搞定开局
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+---
+
+<BaseLayout
+  title="新手快速入门"
+  description="深海迷航 2 新手指南：5 分钟搞懂开局该做什么"
+>
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <div class="mb-4">
+      <VersionBadge />
+    </div>
+
+    <h1 class="font-display text-4xl text-cyan-glow mb-4">新手快速入门</h1>
+    <p class="text-lg text-cyan-200/80 mb-8">
+      第一次玩深海迷航 2？这页帮你 5 分钟搞懂核心循环。
+    </p>
+
+    <!-- 核心循环 -->
+    <section class="mb-8 bg-deep-800 border border-deep-600 rounded-lg p-6">
+      <h2 class="font-display text-2xl text-cyan-glow mb-4">游戏核心循环</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
+        <div class="p-4 bg-deep-700 rounded-lg">
+          <div class="text-3xl mb-2">🔍</div>
+          <div class="font-semibold">探索</div>
+          <div class="text-xs text-cyan-200/60 mt-1">发现新群落和残骸</div>
+        </div>
+        <div class="p-4 bg-deep-700 rounded-lg">
+          <div class="text-3xl mb-2">⛏️</div>
+          <div class="font-semibold">采集</div>
+          <div class="text-xs text-cyan-200/60 mt-1">收集矿物和植物</div>
+        </div>
+        <div class="p-4 bg-deep-700 rounded-lg">
+          <div class="text-3xl mb-2">🔧</div>
+          <div class="font-semibold">制造</div>
+          <div class="text-xs text-cyan-200/60 mt-1">合成装备和载具</div>
+        </div>
+        <div class="p-4 bg-deep-700 rounded-lg">
+          <div class="text-3xl mb-2">⬇️</div>
+          <div class="font-semibold">深潜</div>
+          <div class="text-xs text-cyan-200/60 mt-1">解锁更深区域</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 开局 10 步 -->
+    <section class="mb-8">
+      <h2 class="font-display text-2xl text-cyan-glow mb-4">开局 10 步</h2>
+      <ol class="space-y-4">
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">1</span>
+          <div>
+            <strong>进入救生舱</strong>
+            <p class="text-sm text-cyan-200/70">打开制造机，这是你的初始工作台</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">2</span>
+          <div>
+            <strong>采集石英 ×2</strong>
+            <p class="text-sm text-cyan-200/70">白色晶簇，海底随处可见 → 合成玻璃</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">3</span>
+          <div>
+            <strong>采集铜 ×2 + 酸蘑菇 ×2</strong>
+            <p class="text-sm text-cyan-200/70">铜在洞穴岩壁，酸蘑菇是紫色植物 → 合成电池</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">4</span>
+          <div>
+            <strong>合成扫描枪</strong>
+            <p class="text-sm text-cyan-200/70">钛 ×1 + 电池 ×1。<strong>最重要的工具</strong>，扫描一切碎片解锁蓝图</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">5</span>
+          <div>
+            <strong>合成手电</strong>
+            <p class="text-sm text-cyan-200/70">钛 ×1 + 电池 ×1 + 玻璃 ×1。夜间和洞穴必备</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">6</span>
+          <div>
+            <strong>抓鱼吃</strong>
+            <p class="text-sm text-cyan-200/70">徒手抓小鱼放进制造机做熟食。解决饥饿</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">7</span>
+          <div>
+            <strong>扫描所有碎片</strong>
+            <p class="text-sm text-cyan-200/70">周围 200 米内的金属碎片全扫一遍，解锁栖息地建造工具</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">8</span>
+          <div>
+            <strong>建第一座基地</strong>
+            <p class="text-sm text-cyan-200/70">一个走廊 + 制造机 + 储物柜 + 太阳能板就够</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">9</span>
+          <div>
+            <strong>解锁载具</strong>
+            <p class="text-sm text-cyan-200/70">继续扫描残骸，解锁海蛾号蓝图 → 进入中深海</p>
+          </div>
+        </li>
+        <li class="flex gap-4 items-start">
+          <span class="shrink-0 w-8 h-8 rounded-full bg-cyan-glow text-deep-900 flex items-center justify-center font-bold">10</span>
+          <div>
+            <strong>跟着信号走</strong>
+            <p class="text-sm text-cyan-200/70">无线电会给你坐标，跟着走就是主线</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 生存要点 -->
+    <section class="mb-8 bg-deep-800 border border-deep-600 rounded-lg p-6">
+      <h2 class="font-display text-xl text-cyan-glow mb-3">生存要点</h2>
+      <div class="grid sm:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h3 class="text-cyan-glow font-semibold mb-1">🫁 氧气</h3>
+          <ul class="space-y-1 text-cyan-200/80">
+            <li>初始 45 秒，升级氧气瓶延长</li>
+            <li>载具内自动恢复</li>
+            <li>快没氧气就浮上去，别硬撑</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-cyan-glow font-semibold mb-1">🍖 饥饿 / 口渴</h3>
+          <ul class="space-y-1 text-cyan-200/80">
+            <li>抓鱼做熟食解决饥饿</li>
+            <li>浮囊鱼制成过滤水解决口渴</li>
+            <li>后期建园圃自循环</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-cyan-glow font-semibold mb-1">⚠️ 危险</h3>
+          <ul class="space-y-1 text-cyan-200/80">
+            <li>听到吼叫声 = 附近有大型掠食者</li>
+            <li>不要往黑暗深处游</li>
+            <li>被攻击就跑，不要纠缠</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-cyan-glow font-semibold mb-1">💡 小贴士</h3>
+          <ul class="space-y-1 text-cyan-200/80">
+            <li>F1 查看坐标</li>
+            <li>信标可以标记位置</li>
+            <li>白天探索，夜间回基地整理</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 下一步 -->
+    <section class="bg-cyan-glow/10 border border-cyan-glow/30 rounded-lg p-6">
+      <h2 class="font-display text-xl text-cyan-glow mb-3">接下来看什么</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <a href="/guides/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+          <strong class="text-cyan-glow">主线流程 →</strong>
+          <p class="text-sm text-cyan-200/70">节点式攻略，一步步推进</p>
+        </a>
+        <a href="/map/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+          <strong class="text-cyan-glow">互动地图 →</strong>
+          <p class="text-sm text-cyan-200/70">找资源、找残骸、避开危险</p>
+        </a>
+        <a href="/creatures/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+          <strong class="text-cyan-glow">生物图鉴 →</strong>
+          <p class="text-sm text-cyan-200/70">了解哪些能碰哪些要跑</p>
+        </a>
+        <a href="/tools/calculator/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+          <strong class="text-cyan-glow">配方计算器 →</strong>
+          <p class="text-sm text-cyan-200/70">算清楚需要采集什么</p>
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

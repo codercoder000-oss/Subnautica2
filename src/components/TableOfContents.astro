@@ -1,0 +1,30 @@
+---
+// 自动 TOC：从页面 headings 生成锚点目录
+// 用法：放在文章页侧边栏或顶部
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+  title?: string;
+}
+
+const { headings, title = '目录' } = Astro.props;
+// 只显示 h2 和 h3
+const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{filtered.length > 2 && (
+  <nav class="toc bg-deep-800 border border-deep-600 rounded-lg p-4 text-sm" aria-label="文章目录">
+    <h2 class="font-display text-cyan-glow text-sm mb-3">{title}</h2>
+    <ul class="space-y-1">
+      {filtered.map((h) => (
+        <li class:list={[h.depth === 3 && 'ml-4']}>
+          <a
+            href={`#${h.slug}`}
+            class="block py-0.5 text-cyan-200/70 hover:text-cyan-glow transition truncate"
+          >
+            {h.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

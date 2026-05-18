@@ -1,0 +1,50 @@
+---
+// YouTube 视频嵌入：懒加载 + 响应式
+interface Props {
+  videoId: string;
+  title?: string;
+}
+
+const { videoId, title = '视频' } = Astro.props;
+const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+---
+
+<div class="youtube-embed relative aspect-video rounded-lg overflow-hidden bg-deep-900 border border-deep-600 group cursor-pointer" data-video-id={videoId}>
+  <!-- 缩略图（点击后替换为 iframe） -->
+  <img
+    src={thumbnailUrl}
+    alt={title}
+    loading="lazy"
+    class="w-full h-full object-cover"
+  />
+  <!-- 播放按钮 -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition">
+    <div class="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition">
+      <svg class="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </div>
+  </div>
+  {title && (
+    <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+      <span class="text-sm text-white">{title}</span>
+    </div>
+  )}
+</div>
+
+<script>
+  // 点击缩略图后加载 iframe（节省带宽）
+  document.querySelectorAll<HTMLDivElement>('.youtube-embed').forEach((el) => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.videoId;
+      if (!id) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 w-full h-full';
+      el.innerHTML = '';
+      el.appendChild(iframe);
+    });
+  });
+</script>

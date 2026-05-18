@@ -1,19 +1,38 @@
 ---
-// 科技树可视化（占位，等数据齐全后扩展）
+// 科技树可视化页
+import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
+import TechTree from '@/components/TechTree.tsx';
+
+// 把所有物品转成科技树需要的格式
+const items = await getCollection('items');
+const techNodes = items.map((it) => ({
+  id: it.id,
+  name: it.data.name,
+  category: it.data.category,
+  recipe: it.data.recipe,
+  isRaw: it.data.category === 'raw',
+}));
 ---
 
-<BaseLayout title="科技树" description="深海迷航 2 蓝图科技树可视化">
+<BaseLayout
+  title="科技树"
+  description="深海迷航 2 科技树可视化：蓝图依赖关系图，悬停查看合成链，按类别过滤"
+>
   <div class="max-w-7xl mx-auto px-4 py-6">
     <div class="mb-4 flex items-baseline justify-between flex-wrap gap-2">
       <h1 class="font-display text-3xl text-cyan-glow">科技树</h1>
       <VersionBadge />
     </div>
-    <div class="bg-deep-800 border border-deep-600 rounded-lg p-8 text-center">
-      <p class="text-cyan-200/70">
-        科技树可视化建设中。计划用 D3 力导向图展示蓝图依赖关系，支持「我现在能造什么」筛选。
+
+    <div class="bg-deep-800 border border-deep-600 rounded-lg p-4 mb-4 text-sm text-cyan-200/80">
+      <p>
+        💡 提示：悬停节点可高亮依赖链。底部是基础材料，越往上越高级。
+        点击类别按钮可过滤显示。线条表示「合成需要」关系。
       </p>
     </div>
+
+    <TechTree items={techNodes} client:only="react" />
   </div>
 </BaseLayout>

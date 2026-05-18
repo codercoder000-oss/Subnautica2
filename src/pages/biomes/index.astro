@@ -1,18 +1,34 @@
 ---
-// 生物群落列表
+// 生物群落列表 + 深度分布图
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Card from '@/components/Card.astro';
+import DepthChart from '@/components/DepthChart.astro';
 
 const biomes = await getCollection('biomes');
-const sorted = biomes.sort((a, b) => a.data.depthMin - b.data.depthMin);
+const sorted = [...biomes].sort((a, b) => a.data.depthMin - b.data.depthMin);
+
+// 深度图数据
+const depthData = sorted.map((b) => ({
+  name: b.data.name,
+  slug: b.id,
+  depthMin: b.data.depthMin,
+  depthMax: b.data.depthMax,
+  dangerLevel: b.data.dangerLevel,
+}));
 ---
 
-<BaseLayout title="生物群落" description="深海迷航 2 全生物群落：深度、危险等级、关键资源、典型生物">
+<BaseLayout title="生物群落" description="深海迷航 2 全生物群落：深度分布、危险等级、关键资源、典型生物">
   <div class="max-w-7xl mx-auto px-4 py-6">
     <h1 class="font-display text-3xl text-cyan-glow mb-2">生物群落</h1>
-    <p class="text-cyan-200/70 mb-6">按深度从浅到深排列</p>
+    <p class="text-cyan-200/70 mb-6">共 {biomes.length} 个群落，按深度从浅到深排列</p>
 
+    <!-- 深度分布可视化 -->
+    <div class="mb-8">
+      <DepthChart biomes={depthData} />
+    </div>
+
+    <!-- 卡片列表 -->
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {sorted.map((b) => (
         <Card

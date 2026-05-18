@@ -1,0 +1,92 @@
+---
+// FAQ 页面：结构化数据 + 常见问题
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const faqs = [
+  {
+    q: 'Subnautica 2 是什么类型的游戏？',
+    a: '开放世界水下生存冒险游戏。你在外星海洋星球上探索、采集、建造基地、推进剧情。支持 1-4 人合作。',
+  },
+  {
+    q: 'Subnautica 2 支持多人游戏吗？',
+    a: '是的。最多 4 人在线合作，支持随时加入/退出。PC 和 Xbox Series 跨平台联机。没有 PVP。',
+  },
+  {
+    q: 'Subnautica 2 在哪些平台可以玩？',
+    a: 'PC（Steam、Epic Games Store）和 Xbox Series X|S。已通过 Steam Deck 认证。Day One 加入 Xbox Game Pass。',
+  },
+  {
+    q: '抢先体验阶段会持续多久？',
+    a: 'Unknown Worlds 预计 2-3 年，与一代和 Below Zero 的开发周期类似。期间会持续更新新内容。',
+  },
+  {
+    q: 'Biomod 是什么？',
+    a: '二代核心新机制。扫描特定生物后获取其基因特性，安装到角色身上获得主动或被动能力（如冲刺、夜视、电击防护等）。',
+  },
+  {
+    q: 'Tadpole 是什么？',
+    a: '二代的起始载具（取代一代的海蛾号）。支持多种底盘变体，可自定义附件：有的增加储存空间，有的提升速度。',
+  },
+  {
+    q: '一代的生物和载具会回归吗？',
+    a: '不会。Unknown Worlds 确认二代是全新星球、全新生态系统、全新角色。没有任何一代内容回归。',
+  },
+  {
+    q: '游戏有微交易或战斗通行证吗？',
+    a: '没有。一次性购买，没有微交易、没有战斗通行证、没有使用生成式 AI 开发。',
+  },
+  {
+    q: '这个攻略站是官方的吗？',
+    a: '不是。这是粉丝制作的社区攻略站，与 Unknown Worlds Entertainment 无关。所有游戏资源版权归开发商所有。',
+  },
+  {
+    q: '攻略内容过时了怎么办？',
+    a: '每条内容都标注「适用版本」。如果游戏更新导致内容过时，我们会标记为「已过时」并尽快更新。你也可以通过 GitHub 提交修正。',
+  },
+];
+
+// JSON-LD FAQ Schema
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="常见问题"
+  description="Subnautica 2 常见问题解答：多人、平台、Biomod、载具、抢先体验"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="font-display text-3xl text-cyan-glow mb-2">常见问题</h1>
+    <p class="text-cyan-200/70 mb-8">关于 Subnautica 2 和本攻略站的常见问题</p>
+
+    <div class="space-y-4">
+      {faqs.map((f, i) => (
+        <details class="group bg-deep-800 border border-deep-600 rounded-lg overflow-hidden">
+          <summary class="flex items-center gap-3 px-5 py-4 cursor-pointer hover:bg-deep-700 transition">
+            <span class="shrink-0 w-6 h-6 rounded-full bg-cyan-glow/20 text-cyan-glow flex items-center justify-center text-xs font-bold">
+              {i + 1}
+            </span>
+            <span class="font-semibold flex-1">{f.q}</span>
+            <svg class="w-5 h-5 text-cyan-200/50 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div class="px-5 pb-4 pt-2 text-cyan-200/80 border-t border-deep-600">
+            {f.a}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

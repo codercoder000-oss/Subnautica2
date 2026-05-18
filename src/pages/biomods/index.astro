@@ -1,0 +1,63 @@
+---
+// Biomod 特性页：二代核心机制
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+
+const creatures = await getCollection('creatures');
+const withBiomod = creatures.filter((c) => c.data.biomod);
+---
+
+<BaseLayout
+  title="Biomod 特性"
+  description="深海迷航 2 Biomod 系统：扫描生物获取基因改造能力"
+>
+  <div class="max-w-5xl mx-auto px-4 py-6">
+    <div class="mb-4 flex items-baseline justify-between flex-wrap gap-2">
+      <h1 class="font-display text-3xl text-cyan-glow">Biomod 特性</h1>
+      <VersionBadge />
+    </div>
+
+    <div class="bg-deep-800 border border-deep-600 rounded-lg p-6 mb-6">
+      <h2 class="font-display text-xl text-cyan-glow mb-3">🧬 什么是 Biomod？</h2>
+      <p class="text-cyan-200/80 mb-3">
+        Biomod 是 Subnautica 2 的核心新机制。通过扫描特定生物，玩家可以获取该生物的基因特性，
+        安装到自己身上获得对应能力（如夜视、电击防护、加速游泳等）。
+      </p>
+      <p class="text-cyan-200/60 text-sm">
+        注意：Biomod 数据仍在抢先体验阶段持续更新中，部分内容待数据矿工确认。
+      </p>
+    </div>
+
+    {withBiomod.length > 0 ? (
+      <div class="space-y-4">
+        {withBiomod.map((c) => (
+          <a
+            href={`/creatures/${c.id}/`}
+            class="block bg-deep-800 border border-deep-600 hover:border-cyan-glow rounded-lg p-4 transition"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="font-display text-cyan-glow">{c.data.name}</h3>
+                <p class="text-sm text-cyan-200/60">{c.data.nameEn}</p>
+              </div>
+              <span class="text-xs px-2 py-1 bg-cyan-glow/20 text-cyan-glow rounded shrink-0">
+                {c.data.role}
+              </span>
+            </div>
+            <div class="mt-2 p-3 bg-deep-700 rounded text-sm">
+              <span class="text-cyan-glow">🧬 Biomod：</span>
+              <span class="text-cyan-200/80">{c.data.biomod}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="bg-deep-800 border border-deep-600 rounded-lg p-8 text-center">
+        <p class="text-cyan-200/70">
+          Biomod 数据收集中。随着抢先体验阶段更新，将持续补充。
+        </p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
