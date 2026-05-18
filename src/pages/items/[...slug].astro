@@ -3,6 +3,8 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import RelatedContent from '@/components/RelatedContent.astro';
 
 export async function getStaticPaths() {
   const items = await getCollection('items');
@@ -13,8 +15,15 @@ export async function getStaticPaths() {
 }
 
 const { item } = Astro.props;
-const { Content } = await render(item);
+const { Content, headings } = await render(item);
 const data = item.data;
+
+// 相关物品：同类别
+const allItems = await getCollection('items');
+const relatedItems = allItems
+  .filter((i) => i.id !== item.id && i.data.category === data.category)
+  .slice(0, 6)
+  .map((i) => ({ href: `/items/${i.id}/`, title: i.data.name, subtitle: i.data.nameEn }));
 
 // 把配方里的 itemId 解析成名称
 const recipeWithNames = await Promise.all(
@@ -96,8 +105,12 @@ const CRAFTER_LABELS: Record<string, string> = {
       </section>
     )}
 
-    <section class="prose prose-invert max-w-none">
+    <TableOfContents headings={headings} />
+
+    <section class="prose prose-invert max-w-none mt-6">
       <Content />
     </section>
+
+    <RelatedContent items={relatedItems} title="同类物品" />
   </article>
 </BaseLayout>

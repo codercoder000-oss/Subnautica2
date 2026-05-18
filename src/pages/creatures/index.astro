@@ -1,5 +1,5 @@
 ---
-// 生物图鉴列表页：适配二代 schema（role + size 三档）
+// 生物图鉴列表页：学习 wikily.gg 的 Tab 过滤 + 底部 SEO 长文 + FAQ
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Card from '@/components/Card.astro';
@@ -8,16 +8,15 @@ import { AGGRESSION } from '@/consts';
 const all = await getCollection('creatures');
 
 // 按生态分类分组
-const ROLE_LABELS: Record<string, string> = {
-  leviathan: '利维坦级',
-  predator: '掠食者',
-  carnivore: '肉食动物',
-  herbivore: '食草动物',
-  passive: '温和',
-  other: '其他',
+const ROLE_LABELS: Record<string, { label: string; desc: string }> = {
+  leviathan: { label: '利维坦', desc: '顶级掠食者，体型巨大，领地性极强' },
+  predator: { label: '掠食者', desc: '主动追击玩家的肉食生物' },
+  carnivore: { label: '食肉动物', desc: '中等体型机会主义者' },
+  herbivore: { label: '食草动物', desc: '一般温和，被逼急才反击' },
+  passive: { label: '被动生物', desc: '一见玩家就逃跑' },
+  other: { label: '其他', desc: '难以归类的特殊生物' },
 };
 
-// 排序：利维坦 > 掠食者 > 肉食 > 食草 > 温和 > 其他
 const roleOrder = ['leviathan', 'predator', 'carnivore', 'herbivore', 'passive', 'other'];
 const sorted = [...all].sort((a, b) => {
   const ra = roleOrder.indexOf(a.data.role);
@@ -26,60 +25,178 @@ const sorted = [...all].sort((a, b) => {
   return a.data.depthMin - b.data.depthMin;
 });
 
-// 按 role 分组
 const byRole = sorted.reduce<Record<string, typeof sorted>>((acc, c) => {
   (acc[c.data.role] ??= []).push(c);
   return acc;
 }, {});
+
+// 体型标签
+const SIZE_LABELS: Record<string, string> = { small: '小型', large: '大型', leviathan: '利维坦' };
+
+// FAQ schema
+const faqItems = [
+  { q: 'Subnautica 2 有多少种生物？', a: `抢先体验版本中有 ${all.length} 种已确认生物，包括利维坦级、掠食者、食草动物等。Unknown Worlds 确认后续更新会持续加入新生物。` },
+  { q: '一代的生物会回归吗？', a: 'Unknown Worlds 已确认二代是全新星球、全新生态系统。Reaper、Ghost、Sea Dragon 等一代生物不会回归。' },
+  { q: '如何扫描生物？', a: '使用扫描工具在几米外进行扫描。每次扫描会在 PDA 数据库中生成档案条目，并可能解锁对应的 Biomod 特性。' },
+  { q: '生物可以驯服吗？', a: '没有驯服系统。生物可以被扫描、投喂、击杀或避开，但无法拥有或指挥。' },
+];
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <BaseLayout
   title="生物图鉴"
-  description="深海迷航 2 全生物图鉴：生态分类、出没深度、攻击性、恐惧症友好标签"
+  description="深海迷航 2 全生物图鉴：43 种生物数据库，按生态分类筛选，含攻击性、深度、Biomod 特性"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <div class="max-w-7xl mx-auto px-4 py-6">
-    <h1 class="font-display text-3xl text-cyan-glow mb-2">生物图鉴</h1>
-    <p class="text-cyan-200/70 mb-6">
-      共 {all.length} 种生物。按生态分类分组，每个条目标注攻击性和恐惧症友好提示。
-    </p>
+    <!-- 页头 -->
+    <div class="mb-6">
+      <h1 class="font-display text-3xl text-cyan-glow mb-2">生物数据库</h1>
+      <p class="text-cyan-200/70">
+        共 <strong class="text-cyan-glow">{all.length}</strong> 种生物。
+        按名称搜索，按生态分类筛选。每个条目标注攻击性和恐惧症友好提示。
+      </p>
+    </div>
 
-    <!-- 攻击性图例 -->
-    <details class="mb-6 bg-deep-800 border border-deep-600 rounded-lg p-4">
-      <summary class="cursor-pointer text-cyan-glow font-semibold">攻击性图例</summary>
-      <ul class="mt-3 grid sm:grid-cols-2 gap-2 text-sm">
-        {Object.entries(AGGRESSION).map(([key, cfg]) => (
-          <li class={cfg.color}>
-            <strong>{cfg.label}</strong>：{cfg.desc}
-          </li>
-        ))}
-      </ul>
-    </details>
+    <!-- Tab 过滤器 -->
+    <div class="flex flex-wrap gap-2 mb-6 sticky top-[88px] z-30 bg-deep-900/95 backdrop-blur py-3 -mx-4 px-4 border-b border-deep-600">
+      <a href="#all" class="px-4 py-2 rounded-full bg-cyan-glow text-deep-900 text-sm font-semibold">
+        全部 {all.length}
+      </a>
+      {roleOrder.map((role) => {
+        const list = byRole[role];
+        if (!list || list.length === 0) return null;
+        const cfg = ROLE_LABELS[role];
+        return (
+          <a
+            href={`#${role}`}
+            class="px-4 py-2 rounded-full bg-deep-700 hover:bg-deep-600 text-sm transition"
+          >
+            {cfg.label} {list.length}
+          </a>
+        );
+      })}
+    </div>
 
+    <!-- 分类列表 -->
     {roleOrder.map((role) => {
       const list = byRole[role];
       if (!list || list.length === 0) return null;
+      const cfg = ROLE_LABELS[role];
       return (
-        <section class="mb-8">
-          <h2 class="font-display text-xl text-cyan-glow mb-3">
-            {ROLE_LABELS[role]} <span class="text-sm text-cyan-200/50">({list.length})</span>
-          </h2>
-          <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <section id={role} class="mb-10 scroll-mt-32">
+          <div class="mb-4">
+            <h2 class="font-display text-xl text-cyan-glow">{cfg.label}</h2>
+            <p class="text-sm text-cyan-200/60">{cfg.desc}</p>
+            <span class="text-xs text-cyan-200/40">{list.length} 种</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {list.map((c) => {
-              const cfg = AGGRESSION[c.data.aggression];
+              const aggCfg = AGGRESSION[c.data.aggression];
               return (
-                <Card
+                <a
                   href={`/creatures/${c.id}/`}
-                  title={c.data.name}
-                  subtitle={`${c.data.nameEn} ・ ${c.data.depthMin}~${c.data.depthMax}m`}
-                  badge={cfg.label}
-                  badgeColor={`bg-deep-700 ${cfg.color}`}
-                  image={c.data.image}
-                />
+                  class="group block bg-deep-800 border border-deep-600 rounded-lg overflow-hidden hover:border-cyan-glow hover:shadow-lg hover:shadow-cyan-glow/10 transition"
+                >
+                  {c.data.image ? (
+                    <div class="aspect-square bg-deep-900 overflow-hidden">
+                      <img
+                        src={c.data.image}
+                        alt={c.data.name}
+                        loading="lazy"
+                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                      />
+                    </div>
+                  ) : (
+                    <div class="aspect-square bg-deep-900 flex items-center justify-center text-3xl opacity-30">
+                      🐟
+                    </div>
+                  )}
+                  <div class="p-3">
+                    <h3 class="font-semibold text-sm text-cyan-glow group-hover:text-cyan-300 truncate">
+                      {c.data.name}
+                    </h3>
+                    <p class="text-xs text-cyan-200/50 truncate">{c.data.nameEn}</p>
+                    <div class="flex items-center gap-2 mt-2">
+                      <span class="text-xs px-1.5 py-0.5 rounded bg-deep-700">
+                        {SIZE_LABELS[c.data.size]}
+                      </span>
+                      <span class={`text-xs ${aggCfg.color}`}>
+                        {aggCfg.label}
+                      </span>
+                    </div>
+                  </div>
+                </a>
               );
             })}
           </div>
         </section>
       );
     })}
+
+    <!-- SEO 长文（学习 wikily.gg） -->
+    <section class="mt-12 pt-8 border-t border-deep-600 prose prose-invert prose-cyan max-w-none">
+      <h2 class="font-display text-cyan-glow">关于 Subnautica 2 生物</h2>
+      <p>
+        Subnautica 2 在 2026 年 5 月 14 日的 Early Access 版本中推出了 {all.length} 种生物原型，
+        分为掠食者、利维坦、食肉动物、食草动物、被动生物以及其他类别。
+        每种生物都有手工制作的 AI 行为和完整的骨骼动画。
+        这些生物遍布 Ariadne Arm 的新外星海洋星球各个深度层。
+      </p>
+
+      <h3>生态系统层级</h3>
+      <p>
+        每种生物有一组游戏内角色标签：饮食（肉食/草食/中性）、体型（小型/大型/利维坦）、
+        以及原型标志（独行/群居/放牧/领地性/非猎物），控制其对玩家的反应。
+        掠食者是携带非猎物或利维坦原型标志的肉食动物——主动攻击玩家的生物。
+      </p>
+
+      <h3>生存建议</h3>
+      <ul>
+        <li><strong>从安全距离扫描</strong>：用扫描工具在几米外进行扫描，不需要杀死生物来了解它们</li>
+        <li><strong>注意利维坦的声音提示</strong>：每种利维坦在屏幕上出现前都有独特的声音提示</li>
+        <li><strong>早期携带生存刀</strong>：掠食者可以用刀击退，但优先选择绕路</li>
+        <li><strong>用信标标记领地</strong>：在利维坦活动范围边缘放置信标</li>
+      </ul>
+
+      <h3>Biomod 系统</h3>
+      <p>
+        二代的核心新机制。扫描特定生物后获取其基因特性，安装到角色身上获得主动或被动能力。
+        这替代了一代的升级模块系统，为探索提供了更深的进度层。
+        详见 <a href="/biomods/">Biomod 特性页</a>。
+      </p>
+    </section>
+
+    <!-- FAQ（嵌入页面底部，学习 wikily.gg） -->
+    <section class="mt-12 pt-8 border-t border-deep-600">
+      <h2 class="font-display text-xl text-cyan-glow mb-4">常见问题</h2>
+      <div class="space-y-3">
+        {faqItems.map((f, i) => (
+          <details class="group bg-deep-800 border border-deep-600 rounded-lg overflow-hidden">
+            <summary class="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-deep-700 transition">
+              <span class="shrink-0 w-5 h-5 rounded-full bg-cyan-glow/20 text-cyan-glow flex items-center justify-center text-xs font-bold">
+                {i + 1}
+              </span>
+              <span class="font-semibold text-sm flex-1">{f.q}</span>
+              <svg class="w-4 h-4 text-cyan-200/50 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-4 pb-3 pt-1 text-sm text-cyan-200/80 border-t border-deep-600">
+              {f.a}
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
   </div>
 </BaseLayout>

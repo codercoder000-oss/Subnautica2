@@ -3,6 +3,8 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+import RelatedContent from '@/components/RelatedContent.astro';
 import { AGGRESSION, PHOBIA_TAGS } from '@/consts';
 
 export async function getStaticPaths() {
@@ -14,9 +16,16 @@ export async function getStaticPaths() {
 }
 
 const { creature } = Astro.props;
-const { Content } = await render(creature);
+const { Content, headings } = await render(creature);
 const data = creature.data;
 const aggCfg = AGGRESSION[data.aggression];
+
+// 获取同分类的其他生物作为相关推荐
+const allCreatures = await getCollection('creatures');
+const related = allCreatures
+  .filter((c) => c.id !== creature.id && (c.data.role === data.role || c.data.biomes?.some((b) => data.biomes?.includes(b))))
+  .slice(0, 6)
+  .map((c) => ({ href: `/creatures/${c.id}/`, title: c.data.name, subtitle: c.data.nameEn }));
 
 // 二代生态分类标签
 const ROLE_LABELS: Record<string, string> = {
@@ -161,9 +170,15 @@ const jsonLd = {
       </section>
     )}
 
+    <!-- 目录 -->
+    <TableOfContents headings={headings} />
+
     <!-- 正文 -->
-    <section class="prose prose-invert prose-cyan max-w-none">
+    <section class="prose prose-invert prose-cyan max-w-none mt-6">
       <Content />
     </section>
+
+    <!-- 相关生物推荐 -->
+    <RelatedContent items={related} title="相关生物" />
   </article>
 </BaseLayout>
