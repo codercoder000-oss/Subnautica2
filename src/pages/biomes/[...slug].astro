@@ -1,0 +1,58 @@
+---
+// 群落详情页
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+
+export async function getStaticPaths() {
+  const biomes = await getCollection('biomes');
+  return biomes.map((b) => ({
+    params: { slug: b.id },
+    props: { biome: b },
+  }));
+}
+
+const { biome } = Astro.props;
+const { Content } = await render(biome);
+const data = biome.data;
+---
+
+<BaseLayout title={`${data.name} - 生物群落`} description={`深海迷航 2 ${data.name} 群落详解`}>
+  <article class="max-w-4xl mx-auto px-4 py-8">
+    <nav class="text-sm text-cyan-200/60 mb-4">
+      <a href="/biomes/" class="hover:text-cyan-glow">生物群落</a> / {data.name}
+    </nav>
+
+    <div class="mb-4">
+      <VersionBadge
+        gameVersion={data.gameVersion}
+        verifiedAt={data.verifiedAt}
+        outdated={data.outdated}
+      />
+    </div>
+
+    <header class="mb-6">
+      <h1 class="font-display text-4xl text-cyan-glow">{data.name}</h1>
+      <p class="text-lg text-cyan-200/60 italic">{data.nameEn}</p>
+    </header>
+
+    <div class="grid sm:grid-cols-3 gap-3 mb-6">
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">深度范围</div>
+        <div class="font-mono text-lg text-cyan-glow">{data.depthMin}~{data.depthMax}m</div>
+      </div>
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">危险等级</div>
+        <div class="text-lg">{'⚠️'.repeat(data.dangerLevel)}</div>
+      </div>
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">关键资源</div>
+        <div class="text-sm">{data.keyResources.join('、') || '—'}</div>
+      </div>
+    </div>
+
+    <section class="prose prose-invert max-w-none">
+      <Content />
+    </section>
+  </article>
+</BaseLayout>

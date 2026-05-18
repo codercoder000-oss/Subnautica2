@@ -1,0 +1,42 @@
+---
+// 卡片组件：列表页统一样式
+interface Props {
+  href: string;
+  title: string;
+  subtitle?: string;
+  badge?: string;
+  badgeColor?: string;
+  image?: string;
+}
+const { href, title, subtitle, badge, badgeColor = 'bg-deep-600', image } = Astro.props;
+---
+
+<a
+  href={href}
+  class="group block rounded-lg overflow-hidden bg-deep-800 border border-deep-600 hover:border-cyan-glow hover:shadow-lg hover:shadow-cyan-glow/10 transition"
+>
+  {image && (
+    <div class="aspect-video bg-deep-900 overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+      />
+    </div>
+  )}
+  <div class="p-4">
+    <div class="flex items-start justify-between gap-2 mb-1">
+      <h3 class="font-display font-semibold text-cyan-glow group-hover:text-cyan-300 transition">
+        {title}
+      </h3>
+      {badge && (
+        <span class:list={['text-xs px-2 py-0.5 rounded shrink-0', badgeColor]}>
+          {badge}
+        </span>
+      )}
+    </div>
+    {subtitle && <p class="text-sm text-cyan-200/70">{subtitle}</p>}
+    <slot />
+  </div>
+</a>

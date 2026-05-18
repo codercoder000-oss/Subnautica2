@@ -1,0 +1,28 @@
+---
+// 剧透遮罩：默认隐藏，点击显示
+interface Props {
+  level?: 'minor' | 'major';
+  label?: string;
+}
+const { level = 'minor', label = '剧透' } = Astro.props;
+---
+
+<span class="spoiler-wrap inline-block">
+  <button
+    type="button"
+    class="spoiler-trigger spoiler"
+    data-level={level}
+    aria-label={`显示${label}内容`}
+  >
+    <span class="spoiler-content"><slot /></span>
+  </button>
+</span>
+
+<script>
+  // 点击切换显示
+  document.querySelectorAll<HTMLButtonElement>('.spoiler-trigger').forEach((el) => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('revealed');
+    });
+  });
+</script>

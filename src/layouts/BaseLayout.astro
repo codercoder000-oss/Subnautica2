@@ -1,0 +1,132 @@
+---
+// 全站基础布局
+import { SITE, NAV } from '@/consts';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  ogImage = '/og-default.png',
+  noIndex = false,
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${SITE.title}` : SITE.title;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    {noIndex && <meta name="robots" content="noindex" />}
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
+    <meta property="og:site_name" content={SITE.title} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- 字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bg-deep-900 text-cyan-50 min-h-screen flex flex-col">
+    <!-- 顶部导航 -->
+    <header class="sticky top-0 z-50 bg-deep-800/90 backdrop-blur border-b border-deep-600">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-6">
+        <a href="/" class="font-display font-bold text-cyan-glow text-lg whitespace-nowrap">
+          {SITE.title}
+        </a>
+        <nav class="flex-1 overflow-x-auto">
+          <ul class="flex items-center gap-1 text-sm">
+            {NAV.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="px-3 py-1.5 rounded hover:bg-deep-600 hover:text-cyan-glow transition whitespace-nowrap inline-block"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <a
+          href="/search/"
+          class="text-sm px-3 py-1.5 rounded bg-deep-600 hover:bg-cyan-glow hover:text-deep-900 transition"
+          aria-label="搜索"
+        >
+          搜索
+        </a>
+      </div>
+      <!-- 版本提示条 -->
+      <div class="bg-deep-700 border-t border-deep-600 text-xs text-cyan-200/70 text-center py-1">
+        当前游戏版本：<span class="text-cyan-glow font-mono">{SITE.gameVersion}</span>
+        ・更新于 {SITE.gameVersionDate}
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="border-t border-deep-600 bg-deep-800 mt-12">
+      <div class="max-w-7xl mx-auto px-4 py-8 text-sm text-cyan-200/60 space-y-4">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <h3 class="font-display text-cyan-glow mb-2">{SITE.title}</h3>
+            <p>{SITE.description}</p>
+          </div>
+          <div>
+            <h3 class="font-display text-cyan-glow mb-2">导航</h3>
+            <ul class="space-y-1">
+              {NAV.slice(0, 6).map((item) => (
+                <li><a href={item.href} class="hover:text-cyan-glow">{item.label}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-display text-cyan-glow mb-2">关于</h3>
+            <ul class="space-y-1">
+              <li><a href="/about/" class="hover:text-cyan-glow">站点说明</a></li>
+              <li><a href="/contribute/" class="hover:text-cyan-glow">贡献指南</a></li>
+              <li><a href="https://github.com/" class="hover:text-cyan-glow">GitHub 仓库</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- Fan-made 声明 -->
+        <div class="pt-4 border-t border-deep-600 text-xs text-cyan-200/50">
+          <p>{SITE.disclaimer}</p>
+          <p class="mt-1">© {new Date().getFullYear()} {SITE.author}. 内容采用 CC BY-NC-SA 4.0 协议。</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

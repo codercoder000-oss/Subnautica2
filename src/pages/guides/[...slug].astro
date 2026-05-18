@@ -1,0 +1,96 @@
+---
+// 主线流程详情页
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides');
+  return guides.map((g) => ({
+    params: { slug: g.id },
+    props: { guide: g },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const data = guide.data;
+
+const SPOILER_LABELS = {
+  none: '无剧透',
+  minor: '轻微剧透',
+  major: '重要剧情',
+};
+---
+
+<BaseLayout title={data.title} description={data.description}>
+  <article class="max-w-3xl mx-auto px-4 py-8">
+    <nav class="text-sm text-cyan-200/60 mb-4">
+      <a href="/guides/" class="hover:text-cyan-glow">主线流程</a> / {data.chapter}
+    </nav>
+
+    <div class="mb-4 flex flex-wrap gap-2 items-center">
+      <VersionBadge
+        gameVersion={data.gameVersion}
+        verifiedAt={data.verifiedAt}
+        outdated={data.outdated}
+        outdatedNote={data.outdatedNote}
+      />
+      <span class:list={[
+        'text-xs px-3 py-1 rounded',
+        data.spoilerLevel === 'major' ? 'bg-red-900/50 text-red-300'
+        : data.spoilerLevel === 'minor' ? 'bg-yellow-900/50 text-yellow-300'
+        : 'bg-deep-700 text-cyan-200'
+      ]}>
+        {SPOILER_LABELS[data.spoilerLevel]}
+      </span>
+      {data.estimatedTime && (
+        <span class="text-xs px-3 py-1 rounded bg-deep-700 text-cyan-200">
+          ⏱️ {data.estimatedTime}
+        </span>
+      )}
+    </div>
+
+    <header class="mb-6">
+      <h1 class="font-display text-3xl text-cyan-glow">{data.title}</h1>
+      <p class="text-lg text-cyan-200/70 mt-2">{data.description}</p>
+    </header>
+
+    <!-- 进度勾选 -->
+    <div class="mb-6 p-4 bg-deep-800 border border-deep-600 rounded-lg">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          class="progress-check"
+          data-guide-id={guide.id}
+        />
+        <span>我已完成此节点</span>
+      </label>
+    </div>
+
+    <section class="prose prose-invert max-w-none">
+      <Content />
+    </section>
+  </article>
+
+  <script>
+    // 进度持久化
+    const KEY = 'sub2:guide-progress';
+    const load = (): Record<string, boolean> => {
+      try { return JSON.parse(localStorage.getItem(KEY) ?? '{}'); }
+      catch { return {}; }
+    };
+    const save = (data: Record<string, boolean>) => {
+      localStorage.setItem(KEY, JSON.stringify(data));
+    };
+    const progress = load();
+    document.querySelectorAll<HTMLInputElement>('.progress-check').forEach((cb) => {
+      const id = cb.dataset.guideId!;
+      cb.checked = !!progress[id];
+      cb.addEventListener('change', () => {
+        progress[id] = cb.checked;
+        save(progress);
+      });
+    });
+  </script>
+</BaseLayout>

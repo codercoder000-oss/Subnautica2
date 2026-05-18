@@ -1,0 +1,37 @@
+---
+// 配方计算器页
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+import RecipeCalculator from '@/components/RecipeCalculator.tsx';
+
+// 把所有物品转成计算器需要的格式
+const items = await getCollection('items');
+const recipeItems = items.map((it) => ({
+  id: it.id,
+  name: it.data.name,
+  category: it.data.category,
+  recipe: it.data.recipe,
+  isRaw: it.data.category === 'raw',
+  source: it.data.blueprintSource[0],
+}));
+---
+
+<BaseLayout
+  title="配方计算器"
+  description="深海迷航 2 配方计算器：输入目标物品和数量，自动展开到基础材料清单，支持库存扣减"
+>
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="mb-4 flex items-baseline justify-between flex-wrap gap-2">
+      <h1 class="font-display text-3xl text-cyan-glow">配方计算器</h1>
+      <VersionBadge />
+    </div>
+
+    <p class="text-cyan-200/70 mb-6">
+      选择想合成的目标物品和数量，工具会递归展开到基础材料。
+      展开后可勾选「我已有的材料」扣减实际需要采集的量。
+    </p>
+
+    <RecipeCalculator items={recipeItems} client:load />
+  </div>
+</BaseLayout>

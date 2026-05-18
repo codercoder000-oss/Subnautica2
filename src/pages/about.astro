@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE } from '@/consts';
+---
+
+<BaseLayout title="关于本站" description="Subnautica 2 攻略站说明">
+  <div class="max-w-3xl mx-auto px-4 py-8 prose prose-invert max-w-none">
+    <h1 class="font-display text-cyan-glow">关于本站</h1>
+
+    <h2>这是一个粉丝制作的攻略站</h2>
+    <p><strong>{SITE.disclaimer}</strong></p>
+    <p>
+      本站不是 Unknown Worlds Entertainment 官方网站，与开发商和发行商无任何关联。
+      所有游戏画面、模型、文字资料的版权归 Unknown Worlds Entertainment 所有，
+      本站仅作为粉丝攻略和资料汇总，遵循「合理使用」原则。
+    </p>
+    <p>
+      如果版权方认为本站存在不妥之处，请通过 GitHub 仓库联系我们，我们将立即处理。
+    </p>
+
+    <h2>本站做了什么</h2>
+    <ul>
+      <li><strong>互动地图</strong>：多层深度切换、剧透分级、玩家自定义标记</li>
+      <li><strong>生物图鉴</strong>：含恐惧症友好提示，照顾深海/巨物敏感玩家</li>
+      <li><strong>物品蓝图</strong>：完整配方与获取地点</li>
+      <li><strong>配方计算器</strong>：递归展开到基础材料，支持库存扣减</li>
+      <li><strong>主线流程</strong>：节点式指引，剧透分级</li>
+      <li><strong>版本标签</strong>：每条内容标注适用游戏版本，杜绝过时坑爹</li>
+    </ul>
+
+    <h2>抢先体验阶段说明</h2>
+    <p>
+      Subnautica 2 当前处于抢先体验阶段，游戏内容会持续更新。本站会跟随版本变化更新内容，
+      但偶尔可能滞后。每条内容顶部都会标注「适用版本」，请注意查看。
+      如果发现内容过时，欢迎到 GitHub 仓库提 Issue 或 PR。
+    </p>
+
+    <h2>内容协议</h2>
+    <p>
+      本站原创内容（攻略文字、计算器逻辑、地图标记数据）采用
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a> 协议。
+      欢迎非商业转载，但请保留来源链接。
+    </p>
+
+    <h2>联系我们</h2>
+    <p>
+      贡献内容、报告错误、建议功能：通过 GitHub 仓库提交 Issue 或 Pull Request。
+    </p>
+  </div>
+</BaseLayout>

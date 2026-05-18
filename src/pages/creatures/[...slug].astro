@@ -1,0 +1,169 @@
+---
+// 生物详情页（适配二代 schema：role / scientificName / biomod）
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+import { AGGRESSION, PHOBIA_TAGS } from '@/consts';
+
+export async function getStaticPaths() {
+  const creatures = await getCollection('creatures');
+  return creatures.map((c) => ({
+    params: { slug: c.id },
+    props: { creature: c },
+  }));
+}
+
+const { creature } = Astro.props;
+const { Content } = await render(creature);
+const data = creature.data;
+const aggCfg = AGGRESSION[data.aggression];
+
+// 二代生态分类标签
+const ROLE_LABELS: Record<string, string> = {
+  predator: '掠食者',
+  leviathan: '利维坦级',
+  carnivore: '肉食动物',
+  herbivore: '食草动物',
+  passive: '温和',
+  other: '其他',
+};
+
+// 体型标签
+const SIZE_LABELS: Record<string, string> = {
+  small: '小型',
+  large: '大型',
+  leviathan: '利维坦级',
+};
+
+// 数组字段安全访问（防止 schema 缺字段）
+const aliases = data.aliases ?? [];
+const phobiaTags = data.phobiaTags ?? [];
+const biomes = data.biomes ?? [];
+
+// JSON-LD 结构化数据，给 AI 和搜索引擎吃
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: `${data.name} (${data.nameEn})`,
+  description: `深海迷航 2 ${data.name}：出没深度 ${data.depthMin}~${data.depthMax}m，分类 ${ROLE_LABELS[data.role]}`,
+  datePublished: data.verifiedAt?.toISOString(),
+  about: {
+    '@type': 'Thing',
+    name: data.name,
+    alternateName: [data.nameEn, ...aliases],
+  },
+};
+---
+
+<BaseLayout title={`${data.name} - 生物图鉴`} description={`深海迷航 2 ${data.name} (${data.nameEn}) 完整资料：出没深度、生态分类、Biomod 特性`}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <article class="max-w-4xl mx-auto px-4 py-8">
+    <nav class="text-sm text-cyan-200/60 mb-4">
+      <a href="/creatures/" class="hover:text-cyan-glow">生物图鉴</a> / {data.name}
+    </nav>
+
+    <div class="mb-4">
+      <VersionBadge
+        gameVersion={data.gameVersion}
+        verifiedAt={data.verifiedAt}
+        outdated={data.outdated}
+        outdatedNote={data.outdatedNote}
+      />
+    </div>
+
+    <header class="mb-6">
+      <h1 class="font-display text-4xl text-cyan-glow">{data.name}</h1>
+      <p class="text-lg text-cyan-200/60 italic">
+        {data.nameEn}
+        {data.scientificName && (
+          <span class="ml-2 text-sm">/ <em>{data.scientificName}</em></span>
+        )}
+      </p>
+      {aliases.length > 0 && (
+        <p class="text-sm text-cyan-200/50 mt-1">别名：{aliases.join('、')}</p>
+      )}
+    </header>
+
+    {data.image && (
+      <img
+        src={data.image}
+        alt={data.imageAlt ?? data.name}
+        class="w-full rounded-lg border border-deep-600 mb-6"
+      />
+    )}
+
+    <!-- 关键属性卡片 -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">生态分类</div>
+        <div class="font-display text-lg text-cyan-glow">{ROLE_LABELS[data.role]}</div>
+      </div>
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">攻击性</div>
+        <div class={`font-display text-lg ${aggCfg.color}`}>{aggCfg.label}</div>
+        <div class="text-xs text-cyan-200/50 mt-1">{aggCfg.desc}</div>
+      </div>
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">出没深度</div>
+        <div class="font-display text-lg text-cyan-glow font-mono">
+          {data.depthMin} ~ {data.depthMax} m
+        </div>
+      </div>
+      <div class="bg-deep-800 border border-deep-600 rounded p-3">
+        <div class="text-xs text-cyan-200/60">体型</div>
+        <div class="font-display text-lg text-cyan-glow">{SIZE_LABELS[data.size]}</div>
+      </div>
+    </div>
+
+    <!-- Biomod 特性（二代核心机制） -->
+    {data.biomod && (
+      <div class="mb-6 p-4 bg-cyan-glow/10 border border-cyan-glow/30 rounded-lg">
+        <h2 class="font-display text-cyan-glow mb-1">🧬 Biomod 特性</h2>
+        <p class="text-cyan-100">{data.biomod}</p>
+        <p class="text-xs text-cyan-200/50 mt-2">
+          扫描此生物可获得对应 Biomod，安装后赋予玩家相关能力。
+        </p>
+      </div>
+    )}
+
+    <!-- 恐惧症友好提示 -->
+    {phobiaTags.length > 0 && (
+      <div class="mb-6 p-4 bg-red-900/20 border border-red-800/50 rounded-lg">
+        <h2 class="font-display text-red-300 mb-2">⚠️ 恐惧症友好提示</h2>
+        <div class="flex flex-wrap gap-2">
+          {phobiaTags.map((tag) => (
+            <span class="phobia-tag">
+              {PHOBIA_TAGS[tag as keyof typeof PHOBIA_TAGS] ?? tag}
+            </span>
+          ))}
+        </div>
+        <p class="text-sm text-red-200/70 mt-2">
+          如果你对深海或大型生物敏感，请做好心理准备。建议白天首次接触。
+        </p>
+      </div>
+    )}
+
+    <!-- 出没群落 -->
+    {biomes.length > 0 && (
+      <section class="mb-6">
+        <h2 class="font-display text-cyan-glow text-xl mb-2">出没群落</h2>
+        <div class="flex flex-wrap gap-2">
+          {biomes.map((b) => (
+            <a
+              href={`/biomes/${b}/`}
+              class="px-3 py-1 bg-deep-700 hover:bg-deep-600 rounded text-sm"
+            >
+              {b}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 正文 -->
+    <section class="prose prose-invert prose-cyan max-w-none">
+      <Content />
+    </section>
+  </article>
+</BaseLayout>

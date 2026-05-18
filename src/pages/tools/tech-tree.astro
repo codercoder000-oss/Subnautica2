@@ -1,0 +1,19 @@
+---
+// 科技树可视化（占位，等数据齐全后扩展）
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+---
+
+<BaseLayout title="科技树" description="深海迷航 2 蓝图科技树可视化">
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="mb-4 flex items-baseline justify-between flex-wrap gap-2">
+      <h1 class="font-display text-3xl text-cyan-glow">科技树</h1>
+      <VersionBadge />
+    </div>
+    <div class="bg-deep-800 border border-deep-600 rounded-lg p-8 text-center">
+      <p class="text-cyan-200/70">
+        科技树可视化建设中。计划用 D3 力导向图展示蓝图依赖关系，支持「我现在能造什么」筛选。
+      </p>
+    </div>
+  </div>
+</BaseLayout>

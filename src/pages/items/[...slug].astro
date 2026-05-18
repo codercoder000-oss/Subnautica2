@@ -1,0 +1,103 @@
+---
+// 物品详情页
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('items');
+  return items.map((it) => ({
+    params: { slug: it.id },
+    props: { item: it },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+const data = item.data;
+
+// 把配方里的 itemId 解析成名称
+const recipeWithNames = await Promise.all(
+  data.recipe.map(async (r) => {
+    const sub = await getEntry('items', r.itemId);
+    return { ...r, name: sub?.data.name ?? r.itemId };
+  })
+);
+
+const CRAFTER_LABELS: Record<string, string> = {
+  fabricator: '制造机',
+  'mobile-fabricator': '移动制造器',
+  'modification-station': '改造台',
+  'vehicle-bay': '载具维修舱',
+  'habitat-builder': '栖息地建造工具',
+  none: '无需合成',
+};
+---
+
+<BaseLayout title={`${data.name} - 物品蓝图`} description={`深海迷航 2 ${data.name} 配方与获取`}>
+  <article class="max-w-4xl mx-auto px-4 py-8">
+    <nav class="text-sm text-cyan-200/60 mb-4">
+      <a href="/items/" class="hover:text-cyan-glow">物品蓝图</a> / {data.name}
+    </nav>
+
+    <div class="mb-4">
+      <VersionBadge
+        gameVersion={data.gameVersion}
+        verifiedAt={data.verifiedAt}
+        outdated={data.outdated}
+        outdatedNote={data.outdatedNote}
+      />
+    </div>
+
+    <header class="mb-6">
+      <h1 class="font-display text-4xl text-cyan-glow">{data.name}</h1>
+      <p class="text-lg text-cyan-200/60 italic">{data.nameEn}</p>
+    </header>
+
+    {data.image && (
+      <img src={data.image} alt={data.name} class="rounded-lg border border-deep-600 mb-6 max-w-md" />
+    )}
+
+    <!-- 蓝图来源 -->
+    {data.blueprintSource.length > 0 && (
+      <section class="mb-6 bg-deep-800 border border-deep-600 rounded-lg p-4">
+        <h2 class="font-display text-cyan-glow mb-2">蓝图来源</h2>
+        <ul class="list-disc list-inside space-y-1 text-cyan-200/80">
+          {data.blueprintSource.map((s) => <li>{s}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <!-- 配方 -->
+    {recipeWithNames.length > 0 && (
+      <section class="mb-6 bg-deep-800 border border-deep-600 rounded-lg p-4">
+        <h2 class="font-display text-cyan-glow mb-2">合成配方</h2>
+        <p class="text-sm text-cyan-200/60 mb-3">
+          合成器：<span class="text-cyan-glow">{CRAFTER_LABELS[data.crafter]}</span>
+        </p>
+        <table class="w-full">
+          <tbody>
+            {recipeWithNames.map((r) => (
+              <tr class="border-b border-deep-700 last:border-0">
+                <td class="py-2">
+                  <a href={`/items/${r.itemId}/`} class="hover:text-cyan-glow">{r.name}</a>
+                </td>
+                <td class="py-2 text-right font-mono text-cyan-glow">×{r.qty}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <a
+          href={`/tools/calculator/?target=${data.id}`}
+          class="inline-block mt-3 text-sm text-cyan-glow hover:underline"
+        >
+          → 用配方计算器展开到基础材料
+        </a>
+      </section>
+    )}
+
+    <section class="prose prose-invert max-w-none">
+      <Content />
+    </section>
+  </article>
+</BaseLayout>

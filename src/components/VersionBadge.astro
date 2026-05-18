@@ -1,0 +1,45 @@
+---
+// 版本徽章：每篇内容顶部展示「适用版本 + 是否过时」
+import { SITE } from '@/consts';
+
+interface Props {
+  gameVersion?: string;
+  verifiedAt?: Date;
+  outdated?: boolean;
+  outdatedNote?: string;
+}
+
+const {
+  gameVersion = SITE.gameVersion,
+  verifiedAt,
+  outdated = false,
+  outdatedNote,
+} = Astro.props;
+
+// 判断版本是否落后于当前
+const isOutdatedVersion = gameVersion !== SITE.gameVersion;
+---
+
+<div class:list={[
+  'inline-flex flex-wrap items-center gap-2 text-xs px-3 py-2 rounded border',
+  outdated
+    ? 'bg-red-900/30 border-red-700 text-red-200'
+    : isOutdatedVersion
+    ? 'bg-yellow-900/30 border-yellow-700 text-yellow-200'
+    : 'bg-deep-700 border-deep-600 text-cyan-200/80'
+]}>
+  <span class="font-mono">适用版本：{gameVersion}</span>
+  {verifiedAt && (
+    <span class="opacity-70">
+      ・最后验证 {verifiedAt.toISOString().slice(0, 10)}
+    </span>
+  )}
+  {outdated && (
+    <span class="font-bold">
+      ⚠️ 本内容已过时{outdatedNote ? `：${outdatedNote}` : ''}
+    </span>
+  )}
+  {!outdated && isOutdatedVersion && (
+    <span>当前游戏版本为 {SITE.gameVersion}，可能有差异</span>
+  )}
+</div>

@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="贡献指南" description="如何为 Subnautica 2 攻略站贡献内容">
+  <div class="max-w-3xl mx-auto px-4 py-8 prose prose-invert max-w-none">
+    <h1 class="font-display text-cyan-glow">贡献指南</h1>
+
+    <p>本站基于 Astro 构建，所有内容用 Markdown / MDX 编写，欢迎社区贡献。</p>
+
+    <h2>贡献方式</h2>
+    <ol>
+      <li>Fork GitHub 仓库</li>
+      <li>在对应目录添加或修改内容</li>
+      <li>提交 Pull Request，描述变更</li>
+    </ol>
+
+    <h2>内容目录结构</h2>
+    <pre><code>{`src/content/
+├── creatures/   # 生物图鉴（一个生物一个 .md）
+├── items/       # 物品蓝图
+├── biomes/      # 生物群落
+├── guides/      # 主线流程
+└── changelog/   # 版本日志`}</code></pre>
+
+    <h2>编写规范</h2>
+    <ul>
+      <li>每篇内容必须填写 <code>gameVersion</code> 字段（适用游戏版本）</li>
+      <li>修改内容时更新 <code>verifiedAt</code> 字段（验证日期）</li>
+      <li>过时内容请标记 <code>outdated: true</code> 而不是直接删除</li>
+      <li>剧情相关内容请标记 <code>isStorySpoiler: true</code></li>
+      <li>生物条目请尽量补充 <code>phobiaTags</code>（恐惧症友好标签）</li>
+    </ul>
+
+    <h2>地图标记贡献</h2>
+    <p>
+      地图标记数据在 <code>src/data/map-markers.ts</code>，按格式添加坐标即可。
+      游戏内按 <kbd>F1</kbd> 查看坐标。
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+// 互动地图页
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VersionBadge from '@/components/VersionBadge.astro';
+import InteractiveMap from '@/components/InteractiveMap.tsx';
+import { mapMarkers } from '@/data/map-markers';
+---
+
+<BaseLayout
+  title="互动地图"
+  description="深海迷航 2 互动地图：多层深度切换、生物群落标记、资源点、残骸、剧情位置剧透分级"
+>
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="mb-4 flex items-baseline justify-between flex-wrap gap-2">
+      <h1 class="font-display text-3xl text-cyan-glow">互动地图</h1>
+      <VersionBadge />
+    </div>
+
+    <div class="bg-deep-800 border border-deep-600 rounded-lg p-4 mb-4 text-sm text-cyan-200/80">
+      <p>
+        💡 提示：左侧面板可按深度层和类别筛选标记。
+        <strong class="text-yellow-300">剧情点</strong>默认隐藏，避免剧透。
+        点击「添加自定义标记」可在地图上记录自己的发现，数据保存在你的浏览器。
+      </p>
+    </div>
+
+    <InteractiveMap markers={mapMarkers} client:only="react" />
+
+    <section class="mt-8 prose prose-invert max-w-none">
+      <h2 class="font-display text-cyan-glow">关于地图坐标</h2>
+      <p>
+        游戏内按 F1 可以查看当前坐标 (X, Y, Z)。本地图使用 X / Z 平面坐标，
+        Y 表示深度。地图会随抢先体验阶段更新持续完善，欢迎到 GitHub 仓库贡献新的标记数据。
+      </p>
+    </section>
+  </div>
+</BaseLayout>

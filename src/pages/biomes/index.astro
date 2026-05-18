@@ -1,0 +1,27 @@
+---
+// 生物群落列表
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Card from '@/components/Card.astro';
+
+const biomes = await getCollection('biomes');
+const sorted = biomes.sort((a, b) => a.data.depthMin - b.data.depthMin);
+---
+
+<BaseLayout title="生物群落" description="深海迷航 2 全生物群落：深度、危险等级、关键资源、典型生物">
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <h1 class="font-display text-3xl text-cyan-glow mb-2">生物群落</h1>
+    <p class="text-cyan-200/70 mb-6">按深度从浅到深排列</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {sorted.map((b) => (
+        <Card
+          href={`/biomes/${b.id}/`}
+          title={b.data.name}
+          subtitle={`${b.data.depthMin}~${b.data.depthMax}m ・ 危险 ${'⚠️'.repeat(b.data.dangerLevel)}`}
+          image={b.data.image}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
