@@ -7,7 +7,7 @@ export const SITE = {
   domain: 'subnautica2-guide.com',
   author: 'Subnautica 2 Guide Team',
   // 当前游戏版本，每次游戏更新就改这里，全站自动跟着变
-  gameVersion: 'EA 0.1.0',
+  gameVersion: 'EA 1.0',
   gameVersionDate: '2026-05-14',
   // Fan-made 声明
   disclaimer: 'Fan-made guide site, not affiliated with Unknown Worlds Entertainment. SUBNAUTICA and UNKNOWNWORLDS are trademarks of Unknown Worlds Entertainment, Inc. All game assets © Unknown Worlds Entertainment.',

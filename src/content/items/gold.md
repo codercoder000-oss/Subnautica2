@@ -2,18 +2,18 @@
 name: 黄金
 nameEn: Gold
 category: raw
-blueprintSource: [洞穴矿脉, 水母蘑菇洞穴]
+blueprintSource: [深层矿脉, Karakorum 区域]
 recipe: []
 crafter: none
-gameVersion: EA 0.1.0
-verifiedAt: 2026-05-15
+gameVersion: EA 1.0
+verifiedAt: 2026-05-18
 ---
 
-## 获取
+## 获取方式
 
-- 浅海洞穴矿脉
-- 水母蘑菇洞穴大量产出
+- 深层洞穴矿脉
+- Karakorum 区域较多
 
 ## 用途
 
-电子元件、计算机芯片必备。前期较稀缺。
+高级电子元件必备。

@@ -4,35 +4,32 @@ nameEn: Karakorum
 depthMin: 100
 depthMax: 400
 dangerLevel: 4
-keyResources: [锂, 磁铁矿, 钻石]
-keyCreatures: [锤头, 髓裂者, 收集者利维坦]
-gameVersion: EA 0.1.0
-verifiedAt: 2026-05-15
+keyResources: [Gold, Conduit Crystal, Mineralized Clinker]
+keyCreatures: [Hammerhead, Marrowbreach, Collector Leviathan]
+gameVersion: EA 1.0
+verifiedAt: 2026-05-18
 ---
 
 ## 概述
 
-Subnautica 2 的中深海群落。巨大的岩石尖塔和深谷地形，资源丰富但危险极高。
-
-## 资源亮点
-
-- **锂**：高级合成核心
-- **磁铁矿**：电磁设备必备
-- **钻石**：深谷矿脉
+Subnautica 2 的中深海区域。巨大的岩石尖塔和深谷地形，资源丰富但危险极高。
 
 ## 核心威胁
 
-- **收集者利维坦**：该区域的顶级掠食者，体型巨大
-- **髓裂者**：中型掠食者，速度快
-- **锤头**：食草但受刺激会反击
+- **Collector Leviathan**：该区域的顶级掠食者，不可击杀
+- **Marrowbreach**：中型掠食者，速度快，会跳出水面攻击
+- **Hammerhead**：大型食草动物，受刺激会反击
+
+## 资源亮点
+
+- **Gold**：高级电子元件必备
+- **Conduit Crystal**：电力系统核心材料
+- **Mineralized Clinker**：高级合成
 
 ## 推荐策略
 
-- 载具必备，不建议徒步
+- Tadpole 必备，不建议徒步
 - 深度模块至少 1 级
-- 避开利维坦巡逻路线
+- 避开 Collector Leviathan 巡逻路线（听声音提示）
 - 建议白天首次进入
-
-## 地形特点
-
-垂直落差极大，容易迷路。建议使用信标标记入口和关键资源点。
+- 用信标标记安全路线

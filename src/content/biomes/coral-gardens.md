@@ -4,35 +4,37 @@ nameEn: Coral Gardens
 depthMin: 0
 depthMax: 150
 dangerLevel: 2
-keyResources: [钛, 铜, 石英, 珊瑚样本]
-keyCreatures: [乔迪, 电气乔迪, 弹头鱼]
-gameVersion: EA 0.1.0
-verifiedAt: 2026-05-15
+keyResources: [Raw Ore, Metal Salvage, 酸蘑菇]
+keyCreatures: [Geordie, Electric Geordie, Bullethead, Halfmoon]
+gameVersion: EA 1.0
+verifiedAt: 2026-05-18
 ---
 
 ## 概述
 
-Subnautica 2 的起始群落。色彩斑斓的珊瑚覆盖海底，阳光充足，是新手最安全的活动区域。
+Subnautica 2 的起始区域（Region）。色彩斑斓的珊瑚覆盖海底，阳光充足，包含多个子群落。
 
-## 资源分布
+## 子群落
 
-- **钛矿石**：海床散布，最基础的建造材料
-- **铜矿石**：洞穴和岩壁上
-- **石英晶簇**：透明白色，随处可见
-- **珊瑚样本**：桌状珊瑚上敲取
+- **浅海珊瑚区**：最安全，基础资源丰富
+- **浅海洞穴**：Raw Ore 密度高，有少量敌对生物
+- **珊瑚悬崖**：垂直地形，通向更深区域
+
+## 资源
+
+- **Raw Ore 节点**：钛、铜、石英的主要来源
+- **Metal Salvage**：CICADA 残骸散落
+- **酸蘑菇**：电池材料
 
 ## 生物
 
-- **乔迪**（Geordie）：温和食草鱼，可扫描获取 Biomod
-- **电气乔迪**：受刺激会放电，保持距离
-- **弹头鱼**：小型掠食者，注意规避
+- **Geordie**：温和食草鱼，可扫描获取 Biomod
+- **Electric Geordie**：受刺激会放电
+- **Bullethead**：小型掠食者，注意规避
+- **Halfmoon**：温和小鱼
 
 ## 推荐玩法
 
 - 初期建基地的最佳位置
 - 所有基础蓝图扫描点集中
-- 食物来源稳定
-
-## 与一代对比
-
-珊瑚花园取代了一代的「安全浅滩」，地形更立体，有更多垂直洞穴结构。
+- 找到 Tadpole Pens 解锁载具
