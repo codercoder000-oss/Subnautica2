@@ -1,7 +1,8 @@
----
+﻿---
 // 载具页
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/base';
 import Card from '@/components/Card.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
 
@@ -27,7 +28,7 @@ const vehicles = items.filter((i) => i.data.category === 'vehicle');
       <div class="grid sm:grid-cols-2 gap-4">
         {vehicles.map((v) => (
           <Card
-            href={`/items/${v.id}/`}
+            href={withBase(`/items/${v.id}/`)}
             title={v.data.name}
             subtitle={v.data.nameEn}
             image={v.data.image}
@@ -89,3 +90,4 @@ const vehicles = items.filter((i) => i.data.category === 'vehicle');
     </section>
   </div>
 </BaseLayout>
+
