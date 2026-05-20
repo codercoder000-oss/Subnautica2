@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://subnautica2-guide.com/sitemap-index.xml
+Sitemap: https://coderboy.xyz/sitemap-index.xml
