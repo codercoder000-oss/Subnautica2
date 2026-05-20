@@ -105,7 +105,7 @@ const faqSchema = {
               const aggCfg = AGGRESSION[c.data.aggression];
               return (
                 <a
-                  href={`/creatures/${c.id}/`}
+                  href={withBase(`/creatures/${c.id}/`)}
                   class="group block bg-deep-800 border border-deep-600 rounded-lg overflow-hidden hover:border-cyan-glow hover:shadow-lg hover:shadow-cyan-glow/10 transition"
                 >
                   {c.data.image ? (
@@ -201,4 +201,5 @@ const faqSchema = {
     </section>
   </div>
 </BaseLayout>
+
 

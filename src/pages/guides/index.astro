@@ -30,7 +30,7 @@ const byChapter = sorted.reduce<Record<string, typeof sorted>>((acc, g) => {
         <div class="grid sm:grid-cols-2 gap-4">
           {list.map((g) => (
             <Card
-              href={`/guides/${g.id}/`}
+              href={withBase(`/guides/${g.id}/`)}
               title={g.data.title}
               subtitle={g.data.description}
               badge={g.data.estimatedTime}
@@ -42,4 +42,5 @@ const byChapter = sorted.reduce<Record<string, typeof sorted>>((acc, g) => {
     ))}
   </div>
 </BaseLayout>
+
 

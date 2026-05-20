@@ -76,7 +76,7 @@ const sorted = guides.sort((a, b) => a.data.order - b.data.order);
       <div class="space-y-2">
         {sorted.slice(0, 6).map((g, i) => (
           <a
-            href={`/guides/${g.id}/`}
+            href={withBase(`/guides/${g.id}/`)}
             class="flex items-center gap-3 p-3 bg-deep-800/50 border border-deep-600/50 rounded-lg hover:border-cyan-glow/50 hover:bg-deep-800 transition"
           >
             <span class="shrink-0 w-7 h-7 rounded-full bg-cyan-glow/20 text-cyan-glow flex items-center justify-center text-xs font-bold">

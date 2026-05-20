@@ -33,7 +33,7 @@ const depthData = sorted.map((b) => ({
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {sorted.map((b) => (
         <Card
-          href={`/biomes/${b.id}/`}
+          href={withBase(`/biomes/${b.id}/`)}
           title={b.data.name}
           subtitle={`${b.data.depthMin}~${b.data.depthMax}m ・ 危险 ${'⚠️'.repeat(b.data.dangerLevel)}`}
           image={b.data.image}
@@ -42,4 +42,5 @@ const depthData = sorted.map((b) => ({
     </div>
   </div>
 </BaseLayout>
+
 

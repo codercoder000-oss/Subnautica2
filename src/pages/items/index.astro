@@ -42,7 +42,7 @@ const CATEGORY_LABELS: Record<string, string> = {
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {list.map((item) => (
             <Card
-              href={`/items/${item.id}/`}
+              href={withBase(`/items/${item.id}/`)}
               title={item.data.name}
               subtitle={item.data.nameEn}
               image={item.data.image}
@@ -53,4 +53,5 @@ const CATEGORY_LABELS: Record<string, string> = {
     ))}
   </div>
 </BaseLayout>
+
 
