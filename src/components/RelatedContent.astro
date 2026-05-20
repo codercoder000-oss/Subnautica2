@@ -1,5 +1,6 @@
 ---
 // 相关内容推荐：底部展示相关页面
+import { withBase } from '@/utils/base';
 interface RelatedItem {
   href: string;
   title: string;
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const { items, title = '相关内容' } = Astro.props;
+// 自动给传入的 href 加 base 前缀，调用方可不再操心
+const normalize = (h: string) => (h.startsWith('http') ? h : withBase(h));
 ---
 
 {items.length > 0 && (
@@ -20,7 +23,7 @@ const { items, title = '相关内容' } = Astro.props;
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {items.map((item) => (
         <a
-          href={item.href}
+          href={normalize(item.href)}
           class="block p-3 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow hover:bg-deep-700 transition"
         >
           <span class="text-cyan-glow font-semibold text-sm">{item.title}</span>

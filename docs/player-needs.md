@@ -121,17 +121,17 @@
 2. ✅ Raw Ore 资源系统解释
 3. ✅ Adaptations 完整列表
 4. ✅ 利维坦规避策略
-5. 🔲 **银矿采集指南**（第二热门问题）
-6. 🔲 **食物饮水 + Digestion 解锁指南**（最反直觉机制）
-7. 🔲 **Sonic Resonator 获取指南**
-8. 🔲 **基地电力指南**（Solar vs Hydro）
+5. ✅ **银矿采集指南**（第二热门问题）
+6. ✅ **食物饮水 + Digestion 解锁指南**（最反直觉机制）
+7. ✅ **Sonic Resonator 获取指南**
+8. ✅ **基地电力指南**（Solar vs Hydro）
 
 ### P1 - 本周做
-9. 🔲 Strong Acid 获取
-10. 🔲 铅矿位置
-11. 🔲 最佳基地选址 Top 5
-12. 🔲 Welcome Center 攻略
-13. 🔲 Bloom 清除指南
+9. ✅ Strong Acid 获取
+10. ✅ 铅矿位置
+11. ✅ 最佳基地选址 Top 5
+12. ✅ Welcome Center 攻略
+13. ✅ Bloom 清除指南
 14. 🔲 全蓝图位置列表
 
 ### P2 - 下周做

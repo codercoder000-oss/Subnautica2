@@ -1,0 +1,95 @@
+---
+// 语言切换按钮：中文 ↔ 英文（使用 Google Translate 客户端翻译）
+// 不需要维护双语内容，利用浏览器翻译 API 实现
+---
+
+<div class="lang-switch relative">
+  <button
+    id="lang-toggle"
+    class="flex items-center gap-1 px-2 py-1 rounded text-xs text-cyan-200/70 hover:text-cyan-glow hover:bg-deep-700 transition cursor-pointer"
+    aria-label="Switch language"
+    title="切换语言 / Switch Language"
+  >
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+    </svg>
+    <span id="lang-label">EN</span>
+  </button>
+</div>
+
+<script is:inline>
+  // 使用 Google Translate Element 实现页面翻译
+  (function() {
+    const btn = document.getElementById('lang-toggle');
+    const label = document.getElementById('lang-label');
+    let translated = false;
+
+    // 加载 Google Translate
+    function loadGoogleTranslate() {
+      if (document.getElementById('google-translate-script')) return;
+      
+      // 创建隐藏的 translate element 容器
+      var div = document.createElement('div');
+      div.id = 'google_translate_element';
+      div.style.display = 'none';
+      document.body.appendChild(div);
+
+      // 定义回调
+      window.googleTranslateElementInit = function() {
+        new google.translate.TranslateElement({
+          pageLanguage: 'zh-CN',
+          includedLanguages: 'en,zh-CN',
+          autoDisplay: false
+        }, 'google_translate_element');
+      };
+
+      // 加载脚本
+      var s = document.createElement('script');
+      s.id = 'google-translate-script';
+      s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(s);
+    }
+
+    // 切换语言
+    function toggleLang() {
+      loadGoogleTranslate();
+      
+      // 等待 Google Translate 加载完成
+      var checkInterval = setInterval(function() {
+        var select = document.querySelector('.goog-te-combo');
+        if (select) {
+          clearInterval(checkInterval);
+          if (!translated) {
+            select.value = 'en';
+            select.dispatchEvent(new Event('change'));
+            label.textContent = '中';
+            translated = true;
+          } else {
+            select.value = 'zh-CN';
+            select.dispatchEvent(new Event('change'));
+            label.textContent = 'EN';
+            translated = false;
+          }
+        }
+      }, 100);
+
+      // 超时保护
+      setTimeout(function() { clearInterval(checkInterval); }, 5000);
+    }
+
+    btn.addEventListener('click', toggleLang);
+  })();
+</script>
+
+<style>
+  /* 隐藏 Google Translate 默认 banner */
+  :global(.goog-te-banner-frame) {
+    display: none !important;
+  }
+  :global(body) {
+    top: 0 !important;
+  }
+  :global(.skiptranslate) {
+    display: none !important;
+  }
+</style>

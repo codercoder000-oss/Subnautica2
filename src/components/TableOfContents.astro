@@ -1,6 +1,6 @@
 ---
 // 自动 TOC：从页面 headings 生成锚点目录
-// 用法：放在文章页侧边栏或顶部
+// 桌面端 sticky 在右侧，移动端折叠为按钮；带 scroll spy 高亮当前章节
 interface Props {
   headings: { depth: number; slug: string; text: string }[];
   title?: string;
@@ -12,19 +12,67 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
 {filtered.length > 2 && (
-  <nav class="toc bg-deep-800 border border-deep-600 rounded-lg p-4 text-sm" aria-label="文章目录">
-    <h2 class="font-display text-cyan-glow text-sm mb-3">{title}</h2>
-    <ul class="space-y-1">
-      {filtered.map((h) => (
-        <li class:list={[h.depth === 3 && 'ml-4']}>
-          <a
-            href={`#${h.slug}`}
-            class="block py-0.5 text-cyan-200/70 hover:text-cyan-glow transition truncate"
-          >
-            {h.text}
-          </a>
-        </li>
-      ))}
-    </ul>
+  <nav class="toc-nav not-prose mb-6" aria-label="文章目录">
+    <details class="lg:open:block group bg-deep-800/60 border border-deep-600 rounded-lg overflow-hidden lg:bg-transparent lg:border-0" open>
+      <summary class="lg:hidden flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-deep-700 transition">
+        <span class="font-display text-cyan-glow text-sm">📋 {title}（{filtered.length}）</span>
+        <svg class="w-4 h-4 text-cyan-200/50 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+      <div class="toc-body bg-deep-800 border lg:border-0 border-deep-600 lg:bg-deep-800/40 rounded-lg p-4 text-sm">
+        <h2 class="hidden lg:block font-display text-cyan-glow text-sm mb-3">{title}</h2>
+        <ul class="space-y-1">
+          {filtered.map((h) => (
+            <li class:list={[h.depth === 3 && 'ml-3']}>
+              <a
+                href={`#${h.slug}`}
+                data-toc-link={h.slug}
+                class="toc-link block py-1 px-2 rounded text-cyan-200/70 hover:text-cyan-glow hover:bg-deep-700/50 border-l-2 border-transparent transition truncate"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
   </nav>
 )}
+
+<style>
+  .toc-link.active {
+    color: var(--color-cyan-glow);
+    border-left-color: var(--color-cyan-glow);
+    background: rgba(77, 208, 225, 0.05);
+  }
+</style>
+
+<script>
+  // Scroll spy：高亮当前可见章节
+  const links = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+  if (links.length > 0) {
+    const slugMap = new Map<string, HTMLAnchorElement>();
+    links.forEach((l) => slugMap.set(l.dataset.tocLink!, l));
+
+    const headings = Array.from(slugMap.keys())
+      .map((slug) => document.getElementById(slug))
+      .filter((el): el is HTMLElement => !!el);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 找出当前最靠近顶部的可见 heading
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+        const top = visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        const slug = top.target.id;
+        slugMap.forEach((link, key) => {
+          link.classList.toggle('active', key === slug);
+        });
+      },
+      { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
+    );
+
+    headings.forEach((h) => observer.observe(h));
+  }
+</script>

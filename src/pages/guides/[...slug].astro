@@ -5,6 +5,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import RelatedContent from '@/components/RelatedContent.astro';
+import AdSlot from '@/components/AdSlot.astro';
+import { withBase } from '@/utils/base';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
@@ -20,11 +22,28 @@ const data = guide.data;
 
 // 相关攻略
 const allGuides = await getCollection('guides');
+const sortedAll = [...allGuides].sort((a, b) => a.data.order - b.data.order);
+const idx = sortedAll.findIndex((g) => g.id === guide.id);
+const prevGuide = idx > 0 ? sortedAll[idx - 1] : null;
+const nextGuide = idx >= 0 && idx < sortedAll.length - 1 ? sortedAll[idx + 1] : null;
+
 const related = allGuides
   .filter((g) => g.id !== guide.id && g.data.chapter === data.chapter)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 6)
   .map((g) => ({ href: `/guides/${g.id}/`, title: g.data.title, subtitle: g.data.chapter }));
+
+// Article JSON-LD：让搜索引擎和 AI 把每篇攻略当作正经文章
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.verifiedAt?.toISOString(),
+  dateModified: data.verifiedAt?.toISOString(),
+  author: { '@type': 'Organization', name: 'Subnautica 2 Guide Team' },
+  about: { '@type': 'VideoGame', name: 'Subnautica 2' },
+};
 
 const SPOILER_LABELS = {
   none: '无剧透',
@@ -40,10 +59,12 @@ const SPOILER_COLORS = {
 ---
 
 <BaseLayout title={data.title} description={data.description}>
-  <article class="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <article class="max-w-4xl mx-auto px-4 py-8 animate-fade-in" data-pagefind-filter="type:攻略">
     <!-- 面包屑 -->
     <nav class="text-sm text-cyan-200/50 mb-6 flex items-center gap-2">
-      <a href="/guides/" class="hover:text-cyan-glow transition">主线流程</a>
+      <a href={withBase('/guides/')} class="hover:text-cyan-glow transition">主线流程</a>
       <span class="text-cyan-200/30">/</span>
       <span class="text-cyan-200/70">{data.chapter}</span>
     </nav>
@@ -94,13 +115,35 @@ const SPOILER_COLORS = {
     <!-- 目录（仅当 headings 足够多时显示） -->
     <TableOfContents headings={headings} />
 
-    <!-- 正文 -->
-    <section class="prose prose-invert prose-cyan max-w-none mt-8">
+    <!-- 广告位：文章顶部（TOC 下方） -->
+    <AdSlot position="mid" />
+
+    <!-- 正文（hybrid 模式：微亮内容区提升长文可读性） -->
+    <section class="prose prose-invert prose-cyan max-w-none mt-8 bg-deep-800 rounded-xl p-8 border border-deep-600/60">
       <Content />
     </section>
 
+    <!-- 广告位：文章底部 -->
+    <AdSlot position="bottom" />
+
     <!-- 相关攻略 -->
     <RelatedContent items={related} title="同章节攻略" />
+
+    <!-- 上一篇 / 下一篇 -->
+    <nav class="mt-8 pt-6 border-t border-deep-600 grid sm:grid-cols-2 gap-3" aria-label="文章导航">
+      {prevGuide ? (
+        <a href={withBase(`/guides/${prevGuide.id}/`)} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <div class="text-xs text-cyan-200/50 mb-1">← 上一篇</div>
+          <div class="text-sm font-semibold text-cyan-glow group-hover:text-cyan-300 truncate">{prevGuide.data.title}</div>
+        </a>
+      ) : <div></div>}
+      {nextGuide ? (
+        <a href={withBase(`/guides/${nextGuide.id}/`)} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group sm:text-right">
+          <div class="text-xs text-cyan-200/50 mb-1">下一篇 →</div>
+          <div class="text-sm font-semibold text-cyan-glow group-hover:text-cyan-300 truncate">{nextGuide.data.title}</div>
+        </a>
+      ) : <div></div>}
+    </nav>
   </article>
 
   <script>

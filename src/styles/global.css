@@ -1,15 +1,18 @@
 @import "tailwindcss";
 
-/* 深海主题色系 */
+/* 深海主题色系 - 基于 4 层表面层级系统 */
+/* 参考 Material You tonal elevation + Muzli dark mode guide */
+/* 规则：表面越高（越浮起），明度越高；不用阴影表达层级 */
 @theme {
-  --color-deep-900: #050b1a;
-  --color-deep-800: #0a1628;
-  --color-deep-700: #102339;
-  --color-deep-600: #18324f;
-  --color-deep-500: #1e3f5f;
-  --color-abyss: #061325;
-  --color-cyan-glow: #4dd0e1;
-  --color-cyan-dim: #26a69a;
+  /* 4 层表面层级：base → raised → overlay → elevated */
+  --color-deep-900: #050b1a;   /* surface-base：最深，页面底色 */
+  --color-deep-800: #0a1628;   /* surface-raised：卡片、面板 */
+  --color-deep-700: #102339;   /* surface-overlay：嵌套卡片、hover */
+  --color-deep-600: #18324f;   /* surface-elevated：弹窗、tooltip */
+  --color-deep-500: #1e3f5f;   /* 边框、分割线 */
+  --color-abyss: #040912;      /* 极深：用于 hero 渐变底部 */
+  --color-cyan-glow: #4dd0e1;  /* 主强调色：CTA、标题、链接 */
+  --color-cyan-dim: #26a69a;   /* 次强调色：引用边框、次要链接 */
   --color-warning: #ff9800;
   --color-danger: #f44336;
   --color-safe: #4caf50;
@@ -20,7 +23,8 @@
 
 html {
   background: var(--color-abyss);
-  color: #e0f7fa;
+  /* 正文用 off-white 而非纯白，减少暗色模式眩光 */
+  color: #e0f2f1;
   font-family: var(--font-body);
   scroll-behavior: smooth;
   font-size: 15px;
@@ -28,17 +32,19 @@ html {
 
 body {
   min-height: 100vh;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 /* ===== 排版增强 ===== */
 
 /* 文章正文 prose 覆盖 */
+/* 暗色模式排版规则：正文用 off-white (#b2dfdb)，标题用强调色 */
+/* 行高 1.65 + 段间距 0.8rem 保证长文可读性 */
 .prose {
   --tw-prose-body: #b2dfdb;
   --tw-prose-headings: #4dd0e1;
   --tw-prose-links: #4dd0e1;
-  --tw-prose-bold: #e0f7fa;
+  --tw-prose-bold: #e0f2f1;
   --tw-prose-counters: #4dd0e1;
   --tw-prose-bullets: #26a69a;
   --tw-prose-hr: #18324f;
@@ -98,7 +104,7 @@ body {
 }
 
 .prose strong {
-  color: #e0f7fa;
+  color: #e0f2f1;
   font-weight: 600;
 }
 
@@ -147,13 +153,15 @@ body {
 }
 
 /* ===== 卡片悬浮效果 ===== */
+/* 暗色模式用明度提升 + 边框发光代替阴影（阴影在暗色背景上不可见） */
 .card-hover {
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(77, 208, 225, 0.08);
+  box-shadow: 0 0 0 1px rgba(77, 208, 225, 0.2), 0 8px 24px rgba(77, 208, 225, 0.06);
+  border-color: rgba(77, 208, 225, 0.4);
 }
 
 /* ===== 导航栏优化 ===== */
@@ -175,6 +183,28 @@ header nav a::after {
 header nav a:hover::after {
   width: 80%;
   left: 10%;
+}
+
+/* ===== 全局 focus 可见性（无障碍必备） ===== */
+/* 键盘导航时所有可交互元素都有明确的 focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-cyan-glow);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 鼠标点击不显示 focus ring（减少视觉噪音） */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ===== 按钮/链接触摸目标 ===== */
+/* 移动端最小 44×44px 触摸区域 */
+@media (max-width: 768px) {
+  button, a[href], input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
 /* ===== 剧透遮罩 ===== */
@@ -260,4 +290,104 @@ header nav a:hover::after {
   .prose h2 {
     font-size: 1.15rem;
   }
+}
+
+/* ===== 减少动画偏好 ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in {
+    animation: none;
+    opacity: 1;
+  }
+
+  .bubble-deco {
+    display: none;
+  }
+}
+
+
+/* ===== 步骤列表加大数字 ===== */
+.prose ol {
+  counter-reset: step-counter;
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose ol > li {
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 2.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.prose ol > li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: rgba(77, 208, 225, 0.15);
+  color: var(--color-cyan-glow);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(77, 208, 225, 0.3);
+}
+
+/* Callout 内嵌入的 ol/ul 不要被全局规则覆盖 */
+.callout ol,
+.callout ul {
+  list-style: revert;
+  padding-left: 1.5rem;
+}
+
+.callout ol > li,
+.callout ul > li {
+  padding-left: 0;
+  counter-increment: none;
+}
+
+.callout ol > li::before,
+.callout ul > li::before {
+  content: none;
+}
+
+/* ===== Hero 微动画：浮动光点 ===== */
+@keyframes float-bubble {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+  50% { transform: translateY(-12px) translateX(4px); opacity: 0.7; }
+}
+
+.bubble-deco {
+  position: absolute;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(77, 208, 225, 0.4), transparent 70%);
+  animation: float-bubble 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ===== 卡片 hover 内阴影增强深海感 ===== */
+.card-hover:hover,
+a.group:hover {
+  box-shadow: 0 0 0 1px rgba(77, 208, 225, 0.25), 0 8px 24px rgba(77, 208, 225, 0.08);
+}
+
+/* ===== 隐藏滚动条但保留功能 ===== */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

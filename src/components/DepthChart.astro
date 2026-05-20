@@ -42,7 +42,7 @@ const dangerColors = ['#4caf50', '#8bc34a', '#ffeb3b', '#ff9800', '#f44336'];
         const color = dangerColors[b.dangerLevel - 1] ?? dangerColors[4];
         return (
           <a
-            href={`/biomes/${b.slug}/`}
+            href={(import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL) + `/biomes/${b.slug}/`}
             class="group flex items-center gap-3 hover:bg-deep-700 rounded px-2 py-1 transition"
           >
             <span class="w-24 text-sm truncate group-hover:text-cyan-glow">{b.name}</span>

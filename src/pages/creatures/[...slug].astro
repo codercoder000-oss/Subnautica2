@@ -6,6 +6,7 @@ import VersionBadge from '@/components/VersionBadge.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import RelatedContent from '@/components/RelatedContent.astro';
 import { AGGRESSION, PHOBIA_TAGS } from '@/consts';
+import { withBase } from '@/utils/base';
 
 export async function getStaticPaths() {
   const creatures = await getCollection('creatures');
@@ -49,27 +50,30 @@ const aliases = data.aliases ?? [];
 const phobiaTags = data.phobiaTags ?? [];
 const biomes = data.biomes ?? [];
 
-// JSON-LD 结构化数据，给 AI 和搜索引擎吃
+// JSON-LD 结构化数据：用 CreativeWork + about Thing 嵌套，比直接 Article 更贴合生物档案
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': 'CreativeWork',
   headline: `${data.name} (${data.nameEn})`,
   description: `深海迷航 2 ${data.name}：出没深度 ${data.depthMin}~${data.depthMax}m，分类 ${ROLE_LABELS[data.role]}`,
   datePublished: data.verifiedAt?.toISOString(),
+  inLanguage: 'zh-CN',
   about: {
     '@type': 'Thing',
     name: data.name,
     alternateName: [data.nameEn, ...aliases],
+    additionalType: 'https://schema.org/Animal',
   },
+  isPartOf: { '@type': 'VideoGame', name: 'Subnautica 2' },
 };
 ---
 
 <BaseLayout title={`${data.name} - 生物图鉴`} description={`深海迷航 2 ${data.name} (${data.nameEn}) 完整资料：出没深度、生态分类、Biomod 特性`}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-  <article class="max-w-4xl mx-auto px-4 py-8">
+  <article class="max-w-4xl mx-auto px-4 py-8" data-pagefind-filter="type:生物">
     <nav class="text-sm text-cyan-200/60 mb-4">
-      <a href="/creatures/" class="hover:text-cyan-glow">生物图鉴</a> / {data.name}
+      <a href={withBase('/creatures/')} class="hover:text-cyan-glow">生物图鉴</a> / {data.name}
     </nav>
 
     <div class="mb-4">
@@ -160,7 +164,7 @@ const jsonLd = {
         <div class="flex flex-wrap gap-2">
           {biomes.map((b) => (
             <a
-              href={`/biomes/${b}/`}
+              href={withBase(`/biomes/${b}/`)}
               class="px-3 py-1 bg-deep-700 hover:bg-deep-600 rounded text-sm"
             >
               {b}
@@ -174,7 +178,7 @@ const jsonLd = {
     <TableOfContents headings={headings} />
 
     <!-- 正文 -->
-    <section class="prose prose-invert prose-cyan max-w-none mt-6">
+    <section class="prose prose-invert prose-cyan max-w-none mt-6 bg-deep-800 rounded-xl p-8 border border-deep-600/60">
       <Content />
     </section>
 

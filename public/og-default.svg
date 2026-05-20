@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="55%" r="80%">
+      <stop offset="0%" stop-color="#102339"/>
+      <stop offset="100%" stop-color="#050b1a"/>
+    </radialGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#26a69a"/>
+      <stop offset="100%" stop-color="#4dd0e1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g opacity="0.18" stroke="#4dd0e1" fill="none" stroke-width="1.2">
+    <circle cx="600" cy="315" r="180"/>
+    <circle cx="600" cy="315" r="260"/>
+    <circle cx="600" cy="315" r="340"/>
+  </g>
+  <text x="600" y="270" font-family="Orbitron, sans-serif" font-weight="700" font-size="86" fill="url(#glow)" text-anchor="middle">Subnautica 2</text>
+  <text x="600" y="350" font-family="Inter, sans-serif" font-size="34" fill="#80deea" text-anchor="middle">异星水域 · 中文攻略站</text>
+  <text x="600" y="430" font-family="Inter, sans-serif" font-size="22" fill="#4dd0e1" text-anchor="middle" opacity="0.7">互动地图 · 生物图鉴 · 蓝图配方 · 主线流程</text>
+  <text x="600" y="560" font-family="Inter, sans-serif" font-size="18" fill="#80cbc4" text-anchor="middle" opacity="0.6">coderboy.xyz</text>
+</svg>

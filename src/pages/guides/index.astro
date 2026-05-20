@@ -1,5 +1,5 @@
 ﻿---
-// 主线流程列表：按章节分组
+// 主线流程列表：先按热度置顶（玩家最常搜索），再按章节分组
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { withBase } from '@/utils/base';
@@ -8,10 +8,31 @@ import Card from '@/components/Card.astro';
 const guides = await getCollection('guides');
 const sorted = guides.sort((a, b) => a.data.order - b.data.order);
 
+// 玩家搜索热点 Top（基于 docs/player-needs.md）
+const HOT_IDS = [
+  '05-tadpole-pens-keycode',
+  '09-silver-farming',
+  '10-food-water-digestion',
+  '11-sonic-resonator',
+  '12-base-power',
+  '08-leviathan-survival',
+  '13-strong-acid',
+  '15-base-location',
+];
+const hotGuides = HOT_IDS.map((id) => sorted.find((g) => g.id === id)).filter(Boolean) as typeof sorted;
+
 const byChapter = sorted.reduce<Record<string, typeof sorted>>((acc, g) => {
   (acc[g.data.chapter] ??= []).push(g);
   return acc;
 }, {});
+
+// 章节顺序：求生 → 关键任务 → 核心机制 → 生存技巧 → 资源采集 → 工具解锁 → 基地建设
+const chapterOrder = ['第一章 求生', '关键任务', '核心机制', '生存技巧', '资源采集', '工具解锁', '基地建设', '未分类'];
+const sortedChapters = Object.entries(byChapter).sort(([a], [b]) => {
+  const ia = chapterOrder.indexOf(a);
+  const ib = chapterOrder.indexOf(b);
+  return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+});
 ---
 
 <BaseLayout
@@ -19,14 +40,43 @@ const byChapter = sorted.reduce<Record<string, typeof sorted>>((acc, g) => {
   description="深海迷航 2 主线流程指引：节点式攻略，剧透分级，可标记完成进度"
 >
   <div class="max-w-5xl mx-auto px-4 py-6">
-    <h1 class="font-display text-3xl text-cyan-glow mb-2">主线流程</h1>
+    <h1 class="font-display text-3xl text-cyan-glow mb-2">攻略全集</h1>
     <p class="text-cyan-200/70 mb-6">
-      节点式流程指引。每个节点默认隐藏剧情细节，按需展开。完成进度保存在你的浏览器。
+      共 <strong class="text-cyan-glow">{guides.length}</strong> 篇攻略。
+      节点式流程指引，每篇默认隐藏剧情细节按需展开，进度保存在你的浏览器。
     </p>
 
-    {Object.entries(byChapter).map(([chapter, list]) => (
+    <!-- 🔥 热门问题（玩家最常搜索） -->
+    {hotGuides.length > 0 && (
+      <section class="mb-10">
+        <div class="flex items-baseline gap-3 mb-3">
+          <h2 class="font-display text-xl text-cyan-glow">🔥 热门问题</h2>
+          <span class="text-xs text-cyan-200/50">基于社区高频搜索</span>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {hotGuides.map((g) => (
+            <a
+              href={withBase(`/guides/${g.id}/`)}
+              class="block p-4 bg-gradient-to-br from-deep-800 to-deep-700 border border-cyan-glow/30 rounded-lg hover:border-cyan-glow hover:shadow-lg hover:shadow-cyan-glow/10 transition group"
+            >
+              <h3 class="font-semibold text-cyan-glow group-hover:text-cyan-300 mb-1">{g.data.title}</h3>
+              <p class="text-xs text-cyan-200/60 line-clamp-2">{g.data.description}</p>
+              {g.data.estimatedTime && (
+                <span class="inline-block mt-2 text-[10px] px-2 py-0.5 rounded bg-cyan-glow/10 text-cyan-glow/80">⏱️ {g.data.estimatedTime}</span>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 按章节分组 -->
+    {sortedChapters.map(([chapter, list]) => (
       <section class="mb-8">
-        <h2 class="font-display text-xl text-cyan-glow mb-3">{chapter}</h2>
+        <h2 class="font-display text-xl text-cyan-glow mb-3">
+          {chapter}
+          <span class="text-sm text-cyan-200/50 ml-2">{list.length} 篇</span>
+        </h2>
         <div class="grid sm:grid-cols-2 gap-4">
           {list.map((g) => (
             <Card
@@ -42,5 +92,3 @@ const byChapter = sorted.reduce<Record<string, typeof sorted>>((acc, g) => {
     ))}
   </div>
 </BaseLayout>
-
-

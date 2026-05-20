@@ -1,0 +1,85 @@
+---
+title: 资源系统详解（Raw Ore 机制）
+description: 二代资源获取完全不同于一代：Raw Ore 节点、Metal Salvage、有机材料
+order: 6
+chapter: 核心机制
+prerequisites: []
+spoilerLevel: none
+estimatedTime: 阅读 5 分钟
+gameVersion: EA 1.0
+verifiedAt: 2026-05-18
+---
+import Callout from '@/components/Callout.astro';
+
+<Callout type="danger" title="一句话答案">
+二代**没有独立铜矿/石英矿**。捡 **Raw Ore**（灰色矿石节点）回基地，扔进 **Fabricator** 随机分解为钛/铜/石英。
+</Callout>
+
+## 二代 vs 一代
+
+| 维度 | 一代 | 二代 |
+|------|------|------|
+| 矿种 | 独立矿（石灰岩→钛、铜矿→铜） | Raw Ore 节点 → 制造机随机分解 |
+| 分布 | 海底表面到处都是 | **集中在洞穴** |
+| 有机材料 | 海带种子、珊瑚样本 | 全新体系（蘑菇、Rotsac 等） |
+
+## Raw Ore 节点（核心机制）
+
+<Callout type="step" title="标准流程">
+1. 在海底找到 Raw Ore（灰色矿石节点）
+2. 带回基地放进 Fabricator（制造机）
+3. 制造机**随机**分解为：钛 / 铜 / 石英
+</Callout>
+
+### 哪里 Raw Ore 最多
+
+- **洞穴**：密度最高，优先探索
+- **Coral Gardens 深处**：浅海洞穴入口聚集
+- **Star Zone**：中层区域矿脉丰富
+
+<Callout type="tip" title="效率技巧">
+- 一次出门带满背包 Raw Ore 回来批量分解
+- 不要在外面一个个敲（开背包/取出工具浪费时间）
+- 优先级：洞穴 → 海底表面 → 悬崖壁
+</Callout>
+
+## Metal Salvage（金属碎片）
+
+CICADA 残骸区域大量散落的金属废件。
+
+- **直接用途**：制造机转化为 **Salvaged Titanium**
+- **优势**：前期钛的最快来源，比 Raw Ore 出钛概率高得多
+- **位置**：CICADA Wreck（Lifepod 东北方约 400 米）
+
+## 稀有资源速查
+
+| 资源 | 位置 | 主要用途 |
+|------|------|----------|
+| Gold | 深层洞穴、Karakorum | 高级电子元件 |
+| Lead | 中深海矿脉、CICADA Wreck | 辐射防护、Reinforced Plating |
+| Silver | 洞穴内（**只在洞穴**） | Air Tank、Wiring Kit |
+| Conduit Crystal | Karakorum | 电力系统 |
+| Aeroshell Sponge | Star Zone | 高级合成 |
+| Mineralized Clinker | 深海 | 高级合成 |
+
+## 有机材料
+
+| 材料 | 来源 | 主要用途 |
+|------|------|----------|
+| Acid Mushroom | Coral Gardens 紫色蘑菇 | Mild Acid → 电池 |
+| Cherimoya Rotsac | 深海植物 | 食物 / 合成 |
+| Lucifer Rotsac | 发光植物 | 照明 / 合成 |
+| Crab Feces | 螃蟹排泄物 | 生化燃料 |
+| Necrolei Cyst | Necrolei Fields | Strong Acid 原料 |
+
+## 三大常见误区
+
+<Callout type="warning" title="新人最常踩的坑">
+❌ 「我找不到铜矿」→ 二代没有独立铜矿，去挖 Raw Ore 分解  
+❌ 「石英在哪」→ 同上，Raw Ore 随机产出  
+❌ 「钛不够用」→ 优先捡 Metal Salvage，比挖矿快得多
+</Callout>
+
+<Callout type="info" title="相关攻略">
+[银矿采集指南](/guides/09-silver-farming/) | [Sonic Resonator 获取](/guides/11-sonic-resonator/) | [基地电力指南](/guides/12-base-power/)
+</Callout>

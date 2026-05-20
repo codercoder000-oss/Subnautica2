@@ -3,6 +3,7 @@
 import { SITE, NAV } from '@/consts';
 import MobileNav from '@/components/MobileNav.astro';
 import SearchModal from '@/components/SearchModal.astro';
+import LangSwitch from '@/components/LangSwitch.astro';
 import '@/styles/global.css';
 
 interface Props {
@@ -15,7 +16,7 @@ interface Props {
 const {
   title,
   description = SITE.description,
-  ogImage = '/og-default.png',
+  ogImage = '/og-default.svg',
   noIndex = false,
 } = Astro.props;
 
@@ -26,6 +27,21 @@ const withBase = (path: string) => `${base}${path.startsWith('/') ? path.slice(1
 
 const fullTitle = title ? `${title} | ${SITE.title}` : SITE.title;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+// 站点级 WebSite + SearchAction schema：让搜索引擎知道有站内搜索
+const siteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: Astro.site?.toString(),
+  description: SITE.description,
+  inLanguage: 'zh-CN',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${Astro.site?.toString().replace(/\/$/, '')}${withBase('/')}?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
 ---
 
 <!doctype html>
@@ -63,10 +79,16 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- 站点 WebSite schema（含 SearchAction） -->
+    <script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1397686696757932" crossorigin="anonymous"></script>
   </head>
   <body class="bg-deep-900 text-cyan-50 min-h-screen flex flex-col">
+    <!-- 阅读进度条 -->
+    <div id="reading-progress" class="fixed top-0 left-0 right-0 h-0.5 bg-cyan-glow z-[60] origin-left scale-x-0 transition-transform duration-100" style="transform-origin: left;"></div>
+
     <!-- 顶部导航 -->
     <header class="sticky top-0 z-50 bg-deep-800/95 backdrop-blur-md border-b border-deep-600/50">
       <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-4">
@@ -98,6 +120,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
           搜索
           <kbd class="text-[10px] text-cyan-200/30 ml-1">Ctrl+K</kbd>
         </button>
+        <LangSwitch />
         <MobileNav />
       </div>
       <!-- 版本提示条 -->
@@ -119,6 +142,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
           <div class="flex items-center gap-4">
             <span class="font-display text-cyan-glow/70">{SITE.title}</span>
             <a href={withBase('/about/')} class="hover:text-cyan-glow">关于</a>
+            <a href={withBase('/privacy/')} class="hover:text-cyan-glow">Privacy Policy</a>
             <a href={withBase('/contribute/')} class="hover:text-cyan-glow">贡献</a>
           </div>
           <p>{SITE.disclaimer}</p>
@@ -157,6 +181,17 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
       btn?.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+
+      // 阅读进度条：scroll 高度 / 文档总高度
+      const bar = document.getElementById('reading-progress');
+      function updateProgress() {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        const ratio = max > 0 ? Math.min(1, h.scrollTop / max) : 0;
+        if (bar) bar.style.transform = `scaleX(${ratio})`;
+      }
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
     </script>
   </body>
 </html>

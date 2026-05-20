@@ -1,6 +1,7 @@
 ---
 // 移动端汉堡菜单
 import { NAV } from '@/consts';
+import { withBase } from '@/utils/base';
 ---
 
 <!-- 汉堡按钮（仅移动端显示） -->
@@ -36,7 +37,7 @@ import { NAV } from '@/consts';
       {NAV.map((item) => (
         <li>
           <a
-            href={item.href}
+            href={withBase(item.href)}
             class="block px-3 py-2.5 rounded hover:bg-deep-600 hover:text-cyan-glow transition"
           >
             {item.label}
@@ -45,12 +46,12 @@ import { NAV } from '@/consts';
       ))}
     </ul>
     <div class="mt-6 pt-4 border-t border-deep-600">
-      <a
-        href="/search/"
-        class="block px-3 py-2.5 rounded bg-deep-700 hover:bg-cyan-glow hover:text-deep-900 transition text-center"
+      <button
+        data-open-search
+        class="w-full block px-3 py-2.5 rounded bg-deep-700 hover:bg-cyan-glow hover:text-deep-900 transition text-center cursor-pointer"
       >
         🔍 搜索
-      </a>
+      </button>
     </div>
   </nav>
 </div>

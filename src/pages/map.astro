@@ -3,6 +3,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import GameMap from '@/components/GameMap.tsx';
 import { regions, pois } from '@/data/regions';
+import { withBase } from '@/utils/base';
 ---
 
 <BaseLayout
@@ -17,6 +18,15 @@ import { regions, pois } from '@/data/regions';
         Subnautica 2 没有内置地图。这是社区制作的导航工具。
         {regions.length} 个区域 · {pois.length} 个标记点 · 深度 0~596m
       </p>
+    </div>
+
+    <!-- ⚠️ EA 数据状态提示 -->
+    <div class="mb-4 p-3 bg-yellow-900/20 border border-yellow-700/50 rounded-lg flex items-start gap-2 text-sm">
+      <span class="text-lg leading-none">⚠️</span>
+      <div class="text-yellow-200/80">
+        <strong class="text-yellow-300">EA 数据预览版</strong>：地图瓦片为占位 SVG，标记点基于社区早期数据矿工。
+        真实坐标会随每次游戏更新校准，建议结合<a href={withBase('/guides/')} class="text-cyan-glow hover:underline">攻略</a>使用。
+      </div>
     </div>
 
     <!-- 地图 -->

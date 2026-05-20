@@ -5,6 +5,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import RelatedContent from '@/components/RelatedContent.astro';
+import { withBase } from '@/utils/base';
 
 export async function getStaticPaths() {
   const items = await getCollection('items');
@@ -33,6 +34,11 @@ const recipeWithNames = await Promise.all(
   })
 );
 
+// 反向引用：哪些物品的配方里用到了当前物品
+const usedBy = allItems
+  .filter((i) => i.id !== item.id && i.data.recipe?.some((r) => r.itemId === item.id))
+  .slice(0, 12);
+
 const CRAFTER_LABELS: Record<string, string> = {
   fabricator: '制造机',
   'mobile-fabricator': '移动制造器',
@@ -41,12 +47,34 @@ const CRAFTER_LABELS: Record<string, string> = {
   'habitat-builder': '栖息地建造工具',
   none: '无需合成',
 };
+
+// HowTo JSON-LD：配方天然就是 HowTo，对搜索引擎和 AI 都友好
+const howToJsonLd = recipeWithNames.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: `合成 ${data.name}`,
+  description: `深海迷航 2 ${data.name} (${data.nameEn}) 合成配方与材料`,
+  inLanguage: 'zh-CN',
+  tool: { '@type': 'HowToTool', name: CRAFTER_LABELS[data.crafter] },
+  supply: recipeWithNames.map((r) => ({
+    '@type': 'HowToSupply',
+    name: r.name,
+    requiredQuantity: r.qty,
+  })),
+  step: [
+    { '@type': 'HowToStep', text: `打开 ${CRAFTER_LABELS[data.crafter]}` },
+    { '@type': 'HowToStep', text: `准备材料：${recipeWithNames.map((r) => `${r.name} ×${r.qty}`).join('、')}` },
+    { '@type': 'HowToStep', text: `选择 ${data.name} 配方进行合成` },
+  ],
+} : null;
 ---
 
 <BaseLayout title={`${data.name} - 物品蓝图`} description={`深海迷航 2 ${data.name} 配方与获取`}>
-  <article class="max-w-4xl mx-auto px-4 py-8">
+  {howToJsonLd && <script type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} />}
+
+  <article class="max-w-4xl mx-auto px-4 py-8" data-pagefind-filter="type:物品">
     <nav class="text-sm text-cyan-200/60 mb-4">
-      <a href="/items/" class="hover:text-cyan-glow">物品蓝图</a> / {data.name}
+      <a href={withBase('/items/')} class="hover:text-cyan-glow">物品蓝图</a> / {data.name}
     </nav>
 
     <div class="mb-4">
@@ -89,7 +117,7 @@ const CRAFTER_LABELS: Record<string, string> = {
             {recipeWithNames.map((r) => (
               <tr class="border-b border-deep-700 last:border-0">
                 <td class="py-2">
-                  <a href={`/items/${r.itemId}/`} class="hover:text-cyan-glow">{r.name}</a>
+                  <a href={withBase(`/items/${r.itemId}/`)} class="hover:text-cyan-glow">{r.name}</a>
                 </td>
                 <td class="py-2 text-right font-mono text-cyan-glow">×{r.qty}</td>
               </tr>
@@ -97,7 +125,7 @@ const CRAFTER_LABELS: Record<string, string> = {
           </tbody>
         </table>
         <a
-          href={`/tools/calculator/?target=${data.id}`}
+          href={withBase(`/tools/calculator/?target=${data.id}`)}
           class="inline-block mt-3 text-sm text-cyan-glow hover:underline"
         >
           → 用配方计算器展开到基础材料
@@ -107,9 +135,27 @@ const CRAFTER_LABELS: Record<string, string> = {
 
     <TableOfContents headings={headings} />
 
-    <section class="prose prose-invert max-w-none mt-6">
+    <section class="prose prose-invert max-w-none mt-6 bg-deep-800 rounded-xl p-8 border border-deep-600/60">
       <Content />
     </section>
+
+    {usedBy.length > 0 && (
+      <section class="mt-8 pt-6 border-t border-deep-600">
+        <h2 class="font-display text-cyan-glow text-lg mb-3">用于合成</h2>
+        <p class="text-sm text-cyan-200/60 mb-3">以下物品的配方需要 {data.name}：</p>
+        <div class="flex flex-wrap gap-2">
+          {usedBy.map((u) => (
+            <a
+              href={withBase(`/items/${u.id}/`)}
+              class="inline-flex items-center gap-2 px-3 py-1.5 bg-deep-800 border border-deep-600 rounded-full text-sm hover:border-cyan-glow hover:text-cyan-glow transition"
+            >
+              {u.data.name}
+              <span class="text-xs text-cyan-200/50">{u.data.nameEn}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     <RelatedContent items={relatedItems} title="同类物品" />
   </article>

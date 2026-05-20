@@ -3,6 +3,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VersionBadge from '@/components/VersionBadge.astro';
+import { withBase } from '@/utils/base';
 
 export async function getStaticPaths() {
   const biomes = await getCollection('biomes');
@@ -18,9 +19,9 @@ const data = biome.data;
 ---
 
 <BaseLayout title={`${data.name} - 生物群落`} description={`深海迷航 2 ${data.name} 群落详解`}>
-  <article class="max-w-4xl mx-auto px-4 py-8">
+  <article class="max-w-4xl mx-auto px-4 py-8" data-pagefind-filter="type:群落">
     <nav class="text-sm text-cyan-200/60 mb-4">
-      <a href="/biomes/" class="hover:text-cyan-glow">生物群落</a> / {data.name}
+      <a href={withBase('/biomes/')} class="hover:text-cyan-glow">生物群落</a> / {data.name}
     </nav>
 
     <div class="mb-4">

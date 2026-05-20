@@ -1,6 +1,9 @@
 ---
 // 搜索弹窗：Ctrl+K 或点击搜索按钮触发
 // 使用 Pagefind JS API 实时搜索，不跳转页面
+const base = import.meta.env.BASE_URL;
+// 标准化 base：保证前后各一个 /
+const normBase = base.endsWith('/') ? base : base + '/';
 ---
 
 <!-- 搜索弹窗 -->
@@ -33,27 +36,19 @@
   </div>
 </div>
 
-<script is:inline>
+<script is:inline define:vars={{ pagefindBase: normBase }}>
   (function() {
     const modal = document.getElementById('search-modal');
     const input = document.getElementById('search-input');
     const results = document.getElementById('search-results');
     let pagefind = null;
 
-    // 加载 Pagefind
+    // 加载 Pagefind（用 build 时注入的 base 路径，干净可靠）
     async function loadPagefind() {
       if (pagefind) return pagefind;
       try {
-        // 尝试带 base 路径和不带的两种情况
-        var basePath = document.querySelector('base') ? document.querySelector('base').href : '';
-        var paths = [basePath + 'pagefind/pagefind.js', '/pagefind/pagefind.js', '/Subnautica2/pagefind/pagefind.js'];
-        for (var i = 0; i < paths.length; i++) {
-          try {
-            pagefind = await import(paths[i]);
-            return pagefind;
-          } catch(e) { continue; }
-        }
-        return null;
+        pagefind = await import(/* @vite-ignore */ pagefindBase + 'pagefind/pagefind.js');
+        return pagefind;
       } catch (e) {
         console.warn('Pagefind load failed:', e);
         return null;
