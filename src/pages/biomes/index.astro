@@ -1,7 +1,8 @@
----
+﻿---
 // 生物群落列表 + 深度分布图
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/base';
 import Card from '@/components/Card.astro';
 import DepthChart from '@/components/DepthChart.astro';
 
@@ -41,3 +42,4 @@ const depthData = sorted.map((b) => ({
     </div>
   </div>
 </BaseLayout>
+

@@ -1,7 +1,8 @@
----
+﻿---
 // 主线流程列表：按章节分组
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/base';
 import Card from '@/components/Card.astro';
 
 const guides = await getCollection('guides');
@@ -41,3 +42,4 @@ const byChapter = sorted.reduce<Record<string, typeof sorted>>((acc, g) => {
     ))}
   </div>
 </BaseLayout>
+

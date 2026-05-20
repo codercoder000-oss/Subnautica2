@@ -1,9 +1,10 @@
----
+﻿---
 // 首页：面向「刚买游戏遇到问题的玩家」
 // 核心：快速找到答案 > 展示功能
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { SITE } from '@/consts';
+import { withBase } from '@/utils/base';
 
 const guides = await getCollection('guides');
 const sorted = guides.sort((a, b) => a.data.order - b.data.order);
@@ -39,27 +40,27 @@ const sorted = guides.sort((a, b) => a.data.order - b.data.order);
     <section>
       <h2 class="font-display text-xl text-cyan-glow mb-4">🔥 热门问题</h2>
       <div class="grid sm:grid-cols-2 gap-3">
-        <a href="/guides/05-tadpole-pens-keycode/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+        <a href={withBase("/guides/05-tadpole-pens-keycode/")} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
           <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">Tadpole Pens 密码在哪？</span>
           <p class="text-xs text-cyan-200/50 mt-1">密码不在设施里，在 300 米外的深海洞穴</p>
         </a>
-        <a href="/guides/09-silver-farming/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+        <a href={withBase("/guides/09-silver-farming/")} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
           <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">银矿在哪找？</span>
           <p class="text-xs text-cyan-200/50 mt-1">只在洞穴里，Lifepod 北方 200 米</p>
         </a>
-        <a href="/guides/10-food-water-digestion/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+        <a href={withBase("/guides/10-food-water-digestion/")} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
           <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">为什么吃不了东西？</span>
           <p class="text-xs text-cyan-200/50 mt-1">需要先找 Angel Comb 解锁 Digestion</p>
         </a>
-        <a href="/guides/11-sonic-resonator/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+        <a href={withBase("/guides/11-sonic-resonator/")} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
           <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">Sonic Resonator 怎么获取？</span>
           <p class="text-xs text-cyan-200/50 mt-1">扫描 2 个碎片，Quaker 基地 + Anita 附近</p>
         </a>
-        <a href="/guides/12-base-power/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+        <a href={withBase("/guides/12-base-power/")} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
           <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">基地没电怎么办？</span>
           <p class="text-xs text-cyan-200/50 mt-1">Solar Panel 配方 + Hydroelectric 位置</p>
         </a>
-        <a href="/guides/08-leviathan-survival/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+        <a href={withBase("/guides/08-leviathan-survival/")} class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
           <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">利维坦打不死怎么办？</span>
           <p class="text-xs text-cyan-200/50 mt-1">二代设计：所有利维坦不可击杀，只能规避</p>
         </a>
@@ -97,22 +98,22 @@ const sorted = guides.sort((a, b) => a.data.order - b.data.order);
     <section>
       <h2 class="font-display text-xl text-cyan-glow mb-4">🧭 快速入口</h2>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <a href="/creatures/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+        <a href={withBase("/creatures/")} class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
           <div class="text-2xl mb-1">🐟</div>
           <span class="text-sm text-cyan-200/80">生物图鉴</span>
           <span class="block text-xs text-cyan-200/40 mt-0.5">14 种</span>
         </a>
-        <a href="/items/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+        <a href={withBase("/items/")} class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
           <div class="text-2xl mb-1">🔧</div>
           <span class="text-sm text-cyan-200/80">物品蓝图</span>
           <span class="block text-xs text-cyan-200/40 mt-0.5">10 个</span>
         </a>
-        <a href="/biomes/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+        <a href={withBase("/biomes/")} class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
           <div class="text-2xl mb-1">🌊</div>
           <span class="text-sm text-cyan-200/80">区域群落</span>
           <span class="block text-xs text-cyan-200/40 mt-0.5">4 个</span>
         </a>
-        <a href="/tools/calculator/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+        <a href={withBase("/tools/calculator/")} class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
           <div class="text-2xl mb-1">🧮</div>
           <span class="text-sm text-cyan-200/80">配方计算器</span>
           <span class="block text-xs text-cyan-200/40 mt-0.5">递归展开</span>
@@ -127,3 +128,4 @@ const sorted = guides.sort((a, b) => a.data.order - b.data.order);
     </section>
   </div>
 </BaseLayout>
+

@@ -1,6 +1,7 @@
----
+﻿---
 // 新手快速入门：一页搞定开局
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/base';
 import VersionBadge from '@/components/VersionBadge.astro';
 ---
 
@@ -165,19 +166,19 @@ import VersionBadge from '@/components/VersionBadge.astro';
     <section class="bg-cyan-glow/10 border border-cyan-glow/30 rounded-lg p-6">
       <h2 class="font-display text-xl text-cyan-glow mb-3">接下来看什么</h2>
       <div class="grid sm:grid-cols-2 gap-3">
-        <a href="/guides/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+        <a href={withBase("/guides/")} class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
           <strong class="text-cyan-glow">主线流程 →</strong>
           <p class="text-sm text-cyan-200/70">节点式攻略，一步步推进</p>
         </a>
-        <a href="/map/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+        <a href={withBase("/map/")} class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
           <strong class="text-cyan-glow">互动地图 →</strong>
           <p class="text-sm text-cyan-200/70">找资源、找残骸、避开危险</p>
         </a>
-        <a href="/creatures/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+        <a href={withBase("/creatures/")} class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
           <strong class="text-cyan-glow">生物图鉴 →</strong>
           <p class="text-sm text-cyan-200/70">了解哪些能碰哪些要跑</p>
         </a>
-        <a href="/tools/calculator/" class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
+        <a href={withBase("/tools/calculator/")} class="block p-3 bg-deep-800 rounded hover:bg-deep-700 transition">
           <strong class="text-cyan-glow">配方计算器 →</strong>
           <p class="text-sm text-cyan-200/70">算清楚需要采集什么</p>
         </a>
@@ -185,3 +186,4 @@ import VersionBadge from '@/components/VersionBadge.astro';
     </section>
   </div>
 </BaseLayout>
+

@@ -1,7 +1,8 @@
----
+﻿---
 // 生物图鉴列表页：学习 wikily.gg 的 Tab 过滤 + 底部 SEO 长文 + FAQ
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/base';
 import Card from '@/components/Card.astro';
 import { AGGRESSION } from '@/consts';
 
@@ -172,7 +173,7 @@ const faqSchema = {
       <p>
         二代的核心新机制。扫描特定生物后获取其基因特性，安装到角色身上获得主动或被动能力。
         这替代了一代的升级模块系统，为探索提供了更深的进度层。
-        详见 <a href="/biomods/">Biomod 特性页</a>。
+        详见 <a href={withBase("/biomods/")}>Biomod 特性页</a>。
       </p>
     </section>
 
@@ -200,3 +201,4 @@ const faqSchema = {
     </section>
   </div>
 </BaseLayout>
+
