@@ -1,0 +1,20 @@
+﻿---
+name: Snorkleback (Adult)
+nameEn: Snorkleback (Adult)
+aliases: []
+role: other
+aggression: passive
+depthMin: 0
+depthMax: 300
+biomes: []
+size: small
+phobiaTags: []
+scannable: true
+gameVersion: EA 1.0
+verifiedAt: 2026-05-18
+---
+
+## 概述
+
+Snorkleback (Adult), a 大型 食草动物 in Subnautica 2.
+

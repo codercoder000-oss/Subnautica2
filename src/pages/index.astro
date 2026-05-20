@@ -1,144 +1,129 @@
 ---
-// 首页：决策型内容 + 入口聚合
+// 首页：面向「刚买游戏遇到问题的玩家」
+// 核心：快速找到答案 > 展示功能
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Card from '@/components/Card.astro';
 import { SITE } from '@/consts';
 
-// 获取最新版本日志
-const changelog = await getCollection('changelog');
-const latestChange = changelog.sort(
-  (a, b) => b.data.releaseDate.getTime() - a.data.releaseDate.getTime()
-)[0];
-
-// 获取主线流程第一章
 const guides = await getCollection('guides');
-const firstGuides = guides
-  .filter((g) => !g.data.outdated)
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 4);
-
-// 危险生物预览
-const creatures = await getCollection('creatures');
-const dangerCreatures = creatures
-  .filter((c) => c.data.aggression === 'lethal' || c.data.aggression === 'aggressive')
-  .slice(0, 4);
+const sorted = guides.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout>
-  <!-- Hero 区 -->
-  <section class="relative bg-gradient-to-b from-deep-900 via-deep-800 to-deep-900 border-b border-deep-600">
-    <div class="max-w-7xl mx-auto px-4 py-16 md:py-24">
-      <div class="max-w-3xl">
-        <h1 class="font-display text-4xl md:text-6xl font-bold text-cyan-glow mb-4">
-          Subnautica 2 攻略站
-        </h1>
-        <p class="text-lg md:text-xl text-cyan-100/80 mb-8">
-          深海迷航 2 中文社区攻略：互动地图、生物图鉴、配方计算器、主线流程指引。
-          每条内容都标注适用版本，告别过时攻略。
-        </p>
-        <div class="flex flex-wrap gap-3">
-          <a
-            href="/guides/"
-            class="px-6 py-3 bg-cyan-glow text-deep-900 rounded-lg font-semibold hover:bg-cyan-300 transition"
-          >
-            从主线流程开始 →
-          </a>
-          <a
-            href="/map/"
-            class="px-6 py-3 bg-deep-600 hover:bg-deep-700 rounded-lg font-semibold transition"
-          >
-            打开互动地图
-          </a>
-        </div>
-      </div>
+  <!-- Hero：简洁，直接告诉用户这是什么 -->
+  <section class="bg-gradient-to-b from-deep-800 to-deep-900 border-b border-deep-600/50">
+    <div class="max-w-5xl mx-auto px-4 py-12 md:py-16 text-center">
+      <h1 class="font-display text-3xl md:text-5xl text-cyan-glow mb-3">
+        Subnautica 2 攻略站
+      </h1>
+      <p class="text-cyan-200/70 text-lg max-w-2xl mx-auto mb-6">
+        深海迷航 2 中文攻略。快速找到你需要的答案。
+      </p>
+      <!-- 搜索入口（最重要的功能） -->
+      <button
+        data-open-search
+        class="inline-flex items-center gap-2 px-6 py-3 bg-deep-700 border border-deep-600 rounded-xl text-cyan-200/70 hover:border-cyan-glow hover:text-cyan-glow transition text-sm w-full max-w-md cursor-pointer"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        搜索攻略、生物、物品...
+        <kbd class="ml-auto text-xs text-cyan-200/30">Ctrl+K</kbd>
+      </button>
     </div>
   </section>
 
-  <div class="max-w-7xl mx-auto px-4 py-12 space-y-12">
-    <!-- 今天该做什么（决策型） -->
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-10">
+
+    <!-- 热门问题（玩家最常搜的） -->
+    <section>
+      <h2 class="font-display text-xl text-cyan-glow mb-4">🔥 热门问题</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <a href="/guides/05-tadpole-pens-keycode/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">Tadpole Pens 密码在哪？</span>
+          <p class="text-xs text-cyan-200/50 mt-1">密码不在设施里，在 300 米外的深海洞穴</p>
+        </a>
+        <a href="/guides/09-silver-farming/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">银矿在哪找？</span>
+          <p class="text-xs text-cyan-200/50 mt-1">只在洞穴里，Lifepod 北方 200 米</p>
+        </a>
+        <a href="/guides/10-food-water-digestion/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">为什么吃不了东西？</span>
+          <p class="text-xs text-cyan-200/50 mt-1">需要先找 Angel Comb 解锁 Digestion</p>
+        </a>
+        <a href="/guides/11-sonic-resonator/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">Sonic Resonator 怎么获取？</span>
+          <p class="text-xs text-cyan-200/50 mt-1">扫描 2 个碎片，Quaker 基地 + Anita 附近</p>
+        </a>
+        <a href="/guides/12-base-power/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">基地没电怎么办？</span>
+          <p class="text-xs text-cyan-200/50 mt-1">Solar Panel 配方 + Hydroelectric 位置</p>
+        </a>
+        <a href="/guides/08-leviathan-survival/" class="block p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition group">
+          <span class="text-cyan-glow font-semibold group-hover:text-cyan-300">利维坦打不死怎么办？</span>
+          <p class="text-xs text-cyan-200/50 mt-1">二代设计：所有利维坦不可击杀，只能规避</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 新手路线 -->
     <section>
       <div class="flex items-baseline justify-between mb-4">
-        <h2 class="font-display text-2xl text-cyan-glow">今天该做什么</h2>
-        <a href="/guides/" class="text-sm hover:text-cyan-glow">查看全部 →</a>
+        <h2 class="font-display text-xl text-cyan-glow">📖 新手路线</h2>
+        <a href="/guides/" class="text-xs text-cyan-200/50 hover:text-cyan-glow">全部攻略 →</a>
       </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {firstGuides.map((g) => (
-          <Card
+      <div class="space-y-2">
+        {sorted.slice(0, 6).map((g, i) => (
+          <a
             href={`/guides/${g.id}/`}
-            title={g.data.title}
-            subtitle={g.data.description}
-            badge={g.data.estimatedTime}
-            badgeColor="bg-cyan-glow/20 text-cyan-glow"
-          />
+            class="flex items-center gap-3 p-3 bg-deep-800/50 border border-deep-600/50 rounded-lg hover:border-cyan-glow/50 hover:bg-deep-800 transition"
+          >
+            <span class="shrink-0 w-7 h-7 rounded-full bg-cyan-glow/20 text-cyan-glow flex items-center justify-center text-xs font-bold">
+              {i + 1}
+            </span>
+            <div class="flex-1 min-w-0">
+              <span class="text-sm font-medium text-cyan-100 truncate block">{g.data.title}</span>
+              <span class="text-xs text-cyan-200/40">{g.data.chapter}</span>
+            </div>
+            {g.data.estimatedTime && (
+              <span class="text-xs text-cyan-200/30 shrink-0">{g.data.estimatedTime}</span>
+            )}
+          </a>
         ))}
       </div>
     </section>
 
-    <!-- 版本动态 -->
-    {latestChange && (
-      <section class="bg-deep-800 border border-deep-600 rounded-lg p-6">
-        <div class="flex items-baseline justify-between mb-3">
-          <h2 class="font-display text-xl text-cyan-glow">最新版本变化</h2>
-          <a href="/changelog/" class="text-sm hover:text-cyan-glow">完整日志 →</a>
-        </div>
-        <div class="flex items-center gap-3 mb-2">
-          <span class="font-mono text-sm bg-cyan-glow/20 text-cyan-glow px-2 py-1 rounded">
-            {latestChange.data.version}
-          </span>
-          <span class="text-sm text-cyan-200/60">
-            {latestChange.data.releaseDate.toISOString().slice(0, 10)}
-          </span>
-        </div>
-        <h3 class="text-lg font-semibold mb-1">{latestChange.data.title}</h3>
-        <p class="text-cyan-200/80">{latestChange.data.summary}</p>
-      </section>
-    )}
-
-    <!-- 危险生物提醒 -->
+    <!-- 快速入口 -->
     <section>
-      <div class="flex items-baseline justify-between mb-4">
-        <h2 class="font-display text-2xl text-cyan-glow">深海威胁</h2>
-        <a href="/creatures/" class="text-sm hover:text-cyan-glow">完整图鉴 →</a>
-      </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {dangerCreatures.map((c) => (
-          <Card
-            href={`/creatures/${c.id}/`}
-            title={c.data.name}
-            subtitle={`深度 ${c.data.depthMin}m ~ ${c.data.depthMax}m`}
-            badge={c.data.aggression === 'lethal' ? '致命' : '主动攻击'}
-            badgeColor={c.data.aggression === 'lethal' ? 'bg-red-900/50 text-red-300' : 'bg-orange-900/50 text-orange-300'}
-            image={c.data.image}
-          />
-        ))}
+      <h2 class="font-display text-xl text-cyan-glow mb-4">🧭 快速入口</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <a href="/creatures/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+          <div class="text-2xl mb-1">🐟</div>
+          <span class="text-sm text-cyan-200/80">生物图鉴</span>
+          <span class="block text-xs text-cyan-200/40 mt-0.5">14 种</span>
+        </a>
+        <a href="/items/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+          <div class="text-2xl mb-1">🔧</div>
+          <span class="text-sm text-cyan-200/80">物品蓝图</span>
+          <span class="block text-xs text-cyan-200/40 mt-0.5">10 个</span>
+        </a>
+        <a href="/biomes/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+          <div class="text-2xl mb-1">🌊</div>
+          <span class="text-sm text-cyan-200/80">区域群落</span>
+          <span class="block text-xs text-cyan-200/40 mt-0.5">4 个</span>
+        </a>
+        <a href="/tools/calculator/" class="text-center p-4 bg-deep-800 border border-deep-600 rounded-lg hover:border-cyan-glow transition">
+          <div class="text-2xl mb-1">🧮</div>
+          <span class="text-sm text-cyan-200/80">配方计算器</span>
+          <span class="block text-xs text-cyan-200/40 mt-0.5">递归展开</span>
+        </a>
       </div>
     </section>
 
-    <!-- 工具入口 -->
-    <section>
-      <h2 class="font-display text-2xl text-cyan-glow mb-4">实用工具</h2>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card
-          href="/map/"
-          title="互动地图"
-          subtitle="多层切换、标记过滤、自定义标记、剧透分级"
-          badge="核心工具"
-          badgeColor="bg-cyan-glow/20 text-cyan-glow"
-        />
-        <Card
-          href="/tools/calculator/"
-          title="配方计算器"
-          subtitle="输入目标物品，自动计算所需基础材料清单"
-          badge="必备"
-          badgeColor="bg-cyan-glow/20 text-cyan-glow"
-        />
-        <Card
-          href="/tools/tech-tree/"
-          title="科技树可视化"
-          subtitle="蓝图依赖关系图，规划解锁路径"
-        />
-      </div>
+    <!-- 关于本站（简短） -->
+    <section class="text-center text-xs text-cyan-200/40 pt-6 border-t border-deep-600/30">
+      <p>粉丝制作的中文攻略站，与 Unknown Worlds Entertainment 无关。</p>
+      <p class="mt-1">游戏版本 {SITE.gameVersion} · 内容持续更新中</p>
     </section>
   </div>
 </BaseLayout>

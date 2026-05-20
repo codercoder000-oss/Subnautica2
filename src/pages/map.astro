@@ -1,37 +1,64 @@
 ---
-// 互动地图页
+// 互动地图页 - wikily.gg 级别效果
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import VersionBadge from '@/components/VersionBadge.astro';
-import InteractiveMap from '@/components/InteractiveMap.tsx';
-import { mapMarkers } from '@/data/map-markers';
+import GameMap from '@/components/GameMap.tsx';
+import { regions, pois } from '@/data/regions';
 ---
 
 <BaseLayout
   title="互动地图"
-  description="深海迷航 2 互动地图：多层深度切换、生物群落标记、资源点、残骸、剧情位置剧透分级"
+  description="Subnautica 2 互动地图：12 个区域、资源点、黑匣子、危险生物标记，支持分类过滤"
 >
-  <div class="max-w-7xl mx-auto px-4 py-6">
-    <div class="mb-4 flex items-baseline justify-between flex-wrap gap-2">
-      <h1 class="font-display text-3xl text-cyan-glow">互动地图</h1>
-      <VersionBadge />
-    </div>
-
-    <div class="bg-deep-800 border border-deep-600 rounded-lg p-4 mb-4 text-sm text-cyan-200/80">
-      <p>
-        💡 提示：左侧面板可按深度层和类别筛选标记。
-        <strong class="text-yellow-300">剧情点</strong>默认隐藏，避免剧透。
-        点击「添加自定义标记」可在地图上记录自己的发现，数据保存在你的浏览器。
+  <div class="max-w-[1400px] mx-auto px-4 py-6">
+    <!-- 页头 -->
+    <div class="mb-4">
+      <h1 class="font-display text-2xl text-cyan-glow">互动地图</h1>
+      <p class="text-sm text-cyan-200/60">
+        Subnautica 2 没有内置地图。这是社区制作的导航工具。
+        {regions.length} 个区域 · {pois.length} 个标记点 · 深度 0~596m
       </p>
     </div>
 
-    <InteractiveMap markers={mapMarkers} client:only="react" />
+    <!-- 地图 -->
+    <GameMap regions={regions} pois={pois} client:only="react" />
 
-    <section class="mt-8 prose prose-invert max-w-none">
-      <h2 class="font-display text-cyan-glow">关于地图坐标</h2>
+    <!-- 底部 SEO 内容 -->
+    <section class="mt-10 prose prose-invert prose-cyan max-w-none">
+      <h2>Subnautica 2 没有内置地图</h2>
       <p>
-        游戏内按 F1 可以查看当前坐标 (X, Y, Z)。本地图使用 X / Z 平面坐标，
-        Y 表示深度。地图会随抢先体验阶段更新持续完善，欢迎到 GitHub 仓库贡献新的标记数据。
+        Unknown Worlds 在官方 Discord 确认，Subnautica 2 不会自带内置地图。
+        和原版 Subnautica 以及 Below Zero 一样，工作室希望玩家通过观察环境、
+        学习地标和使用指南针来导航。PDA、指南针和信标是游戏内的导航工具。
       </p>
+
+      <h2>如何在没有地图的情况下导航</h2>
+      <ol>
+        <li><strong>指南针优先</strong>：屏幕上的指南针显示方向，是每次导航决策的基础</li>
+        <li><strong>用地标不用坐标</strong>：记住每个区域 3-5 个地标（尖塔、残骸轮廓、特殊植物）</li>
+        <li><strong>深潜前放信标</strong>：Beacon 可穿透地形，从远处可见</li>
+        <li><strong>扫描一切</strong>：PDA 扫描会记录生物群落笔记，是你的「软地图」</li>
+        <li><strong>用本页地图看布局</strong>：规划路线，避开利维坦区域</li>
+      </ol>
+
+      <h2>区域结构</h2>
+      <p>
+        Subnautica 2 在生态区系统上增加了「区域」层级。一个区域包含多个主题生态区和子生态区。
+        EA 阶段至少有 2 个大区域，后续更新会加入更多。地图半径约 2 公里，最大深度 596 米。
+      </p>
+
+      <h2>常见问题</h2>
+      <details>
+        <summary>Subnautica 2 有内置地图吗？</summary>
+        <p>没有。Unknown Worlds 确认不会加入内置地图，和一代设计一致。</p>
+      </details>
+      <details>
+        <summary>地图有多大？</summary>
+        <p>半径约 2 公里，16 个区域，最大深度 596 米。</p>
+      </details>
+      <details>
+        <summary>怎么看坐标？</summary>
+        <p>按 F1 打开调试信息，可以看到当前 X/Y/Z 坐标。</p>
+      </details>
     </section>
   </div>
 </BaseLayout>

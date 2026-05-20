@@ -28,7 +28,7 @@ html {
 
 body {
   min-height: 100vh;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 /* ===== 排版增强 ===== */
@@ -52,17 +52,19 @@ body {
 }
 
 .prose h2 {
-  margin-top: 2.5rem;
-  padding-bottom: 0.5rem;
+  margin-top: 1.8rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid #18324f;
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 }
 
 .prose h3 {
-  margin-top: 1.8rem;
+  margin-top: 1.4rem;
+  margin-bottom: 0.4rem;
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #80cbc4;
 }
 
@@ -111,20 +113,16 @@ body {
 }
 
 .prose ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.prose ul > li {
-  position: relative;
+  list-style: disc;
   padding-left: 1.5rem;
 }
 
-.prose ul > li::before {
-  content: "▸";
-  position: absolute;
-  left: 0;
-  color: #26a69a;
+.prose ul > li {
+  margin-bottom: 0.25rem;
+}
+
+.prose ol > li {
+  margin-bottom: 0.3rem;
 }
 
 .prose ol > li::marker {
@@ -140,8 +138,11 @@ body {
 }
 
 /* ===== 步骤列表样式 ===== */
-.prose ol > li {
-  padding-left: 0.5rem;
+.prose ol {
+  padding-left: 1.5rem;
+}
+
+.prose p {
   margin-bottom: 0.8rem;
 }
 

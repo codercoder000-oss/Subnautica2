@@ -25,3 +25,6 @@ pnpm-debug.log*
 Thumbs.db
 # 临时构建日志
 build.log
+
+# pagefind dev index (build产物复制到public供dev使用)
+public/pagefind/

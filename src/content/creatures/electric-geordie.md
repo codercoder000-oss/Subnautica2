@@ -1,4 +1,4 @@
----
+﻿---
 name: 电气乔迪
 nameEn: Electric Geordie
 aliases: [Electric Geordie]
@@ -9,6 +9,7 @@ depthMax: 150
 biomes: [coral-gardens]
 size: small
 phobiaTags: []
+image: https://r2.wikily.gg/images/subnautica-2/icons/T_ElectricGeordie_Icon.webp
 scannable: true
 biomod: 待数据矿工确认
 gameVersion: EA 0.1.0
@@ -32,3 +33,4 @@ verifiedAt: 2026-05-15
 ## 用途
 
 扫描后可能解锁电相关 Biomod 特性，对深海生存有重要价值。
+

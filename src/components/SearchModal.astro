@@ -1,0 +1,128 @@
+---
+// 搜索弹窗：Ctrl+K 或点击搜索按钮触发
+// 使用 Pagefind JS API 实时搜索，不跳转页面
+---
+
+<!-- 搜索弹窗 -->
+<div id="search-modal" class="fixed inset-0 z-[200] hidden">
+  <!-- 遮罩 -->
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" data-close-search></div>
+  <!-- 弹窗主体 -->
+  <div class="relative max-w-2xl mx-auto mt-[10vh] bg-deep-800 border border-deep-600 rounded-xl shadow-2xl shadow-cyan-glow/5 overflow-hidden">
+    <!-- 搜索输入 -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-deep-600">
+      <svg class="w-5 h-5 text-cyan-glow shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        id="search-input"
+        type="text"
+        placeholder="搜索生物、物品、攻略..."
+        class="flex-1 bg-transparent text-cyan-50 placeholder-cyan-200/40 outline-none text-base"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="hidden sm:inline-block text-xs text-cyan-200/40 bg-deep-700 px-1.5 py-0.5 rounded border border-deep-600">ESC</kbd>
+    </div>
+    <!-- 搜索结果 -->
+    <div id="search-results" class="max-h-[60vh] overflow-y-auto p-2">
+      <div class="text-center text-sm text-cyan-200/40 py-8">
+        输入关键词开始搜索
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+    let pagefind = null;
+
+    // 加载 Pagefind
+    async function loadPagefind() {
+      if (pagefind) return pagefind;
+      try {
+        pagefind = await import('/pagefind/pagefind.js');
+        return pagefind;
+      } catch (e) {
+        console.warn('Pagefind load failed:', e);
+        return null;
+      }
+    }
+
+    // 打开
+    function openSearch() {
+      modal.classList.remove('hidden');
+      input.focus();
+      document.body.style.overflow = 'hidden';
+      loadPagefind();
+    }
+
+    // 关闭
+    function closeSearch() {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      input.value = '';
+      results.innerHTML = '<div class="text-center text-sm text-cyan-200/40 py-8">输入关键词开始搜索</div>';
+    }
+
+    // 搜索
+    let timer;
+    async function doSearch(query) {
+      if (!query.trim()) {
+        results.innerHTML = '<div class="text-center text-sm text-cyan-200/40 py-8">输入关键词开始搜索</div>';
+        return;
+      }
+
+      const pf = await loadPagefind();
+      if (!pf) {
+        results.innerHTML = '<div class="text-center text-sm text-red-300/70 py-8">搜索索引未就绪（需要先 build）</div>';
+        return;
+      }
+
+      const search = await pf.search(query);
+      if (search.results.length === 0) {
+        results.innerHTML = '<div class="text-center text-sm text-cyan-200/50 py-8">没有找到相关内容</div>';
+        return;
+      }
+
+      const items = await Promise.all(search.results.slice(0, 8).map(function(r) { return r.data(); }));
+      results.innerHTML = items.map(function(item) {
+        return '<a href="' + item.url + '" class="block px-3 py-2.5 rounded-lg hover:bg-deep-700 transition group">' +
+          '<div class="text-sm font-medium text-cyan-glow group-hover:text-cyan-300 truncate">' + (item.meta.title || item.url) + '</div>' +
+          '<div class="text-xs text-cyan-200/50 mt-0.5 line-clamp-2">' + item.excerpt + '</div>' +
+        '</a>';
+      }).join('');
+    }
+
+    // 输入事件
+    input.addEventListener('input', function() {
+      clearTimeout(timer);
+      timer = setTimeout(function() { doSearch(input.value); }, 200);
+    });
+
+    // 键盘快捷键
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+      if (e.key === 'Escape') closeSearch();
+    });
+
+    // 遮罩关闭
+    modal.querySelectorAll('[data-close-search]').forEach(function(el) {
+      el.addEventListener('click', closeSearch);
+    });
+
+    // 搜索按钮
+    document.querySelectorAll('[data-open-search]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        openSearch();
+      });
+    });
+  })();
+</script>

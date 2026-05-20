@@ -1,0 +1,74 @@
+---
+title: 基地电力完整指南
+description: Solar Panel vs Hydroelectric Turbine：配方、放置、电力管理
+order: 12
+chapter: 基地建设
+prerequisites: [01-first-hour]
+spoilerLevel: none
+estimatedTime: 15 分钟
+gameVersion: EA 1.0
+verifiedAt: 2026-05-18
+---
+import Callout from '@/components/Callout.astro';
+
+<Callout type="warning" title="电力 = 氧气">
+基地电力不足时氧气生产停止，整个基地变成淹水房间。电力管理是生存核心。
+</Callout>
+
+## 电力系统基础
+
+屏幕左上角两个条：
+- **蓝条** = 当前产电量
+- **红条** = 当前耗电量
+
+**红条超过蓝条 = 系统崩溃**，所有设施停止工作，氧气断供。
+
+## 发电方式对比
+
+| 发电器 | 产电量 | 配方 | 特点 |
+|--------|--------|------|------|
+| **Solar Panel** | 1-8/秒 | 钛 ×1 + 石英 ×2 | 便宜，但夜间/深水减弱 |
+| **Hydroelectric Turbine** | 12/秒 | 钛 ×3 + 铜 ×3 + 银 ×3 | 稳定，需要水流位置 |
+| **Thermal Plant** | 1-16/秒 | 钛 ×3 + 铜 ×3 + 金 ×3 | 需要地热喷口 |
+| **Bioreactor** | 1-20/秒 | 钛锭 ×2 + 铜锭 ×2 | 最高产但需手动加燃料 |
+
+<Callout type="danger" title="Solar Panel 陷阱">
+只用 Solar Panel 的基地夜间可能断电断氧。前期至少放 3 块，中期尽快换 Hydroelectric。
+</Callout>
+
+## Solar Panel（起步之选）
+
+**配方**：钛 ×1 + 石英 ×2（Exterior → Energy）
+
+放置要点：
+- 放在基地**屋顶**
+- 越浅越好（深海无效）
+- 白天满功率，夜间低至 1/秒
+
+数量建议：
+- 最小基地：3 块
+- 中型基地（+Fabricator+Processor）：5-6 块
+
+## Hydroelectric Turbine（最佳长期方案）
+
+<Callout type="tip" title="如何找水流">
+水中有**波浪状隧道**（游进去会被拉着走）的位置就是放涡轮的地方。基地选址时优先考虑附近有水流。
+</Callout>
+
+**优势**：产电量是 Solar 的 **2 倍**，不受昼夜影响，一劳永逸。
+
+**劣势**：需要蓝图 + 银矿 + 必须在水流位置。
+
+**连接方式**：涡轮 → Power Transmitter（钛 ×1 + 铜 ×1）→ 基地外壁
+
+## 电力管理建议
+
+**前期**：3 块 Solar Panel，基地建在浅海（50 米内），夜间少开设备。
+
+**中期**：找到水流位置，放 1-2 个 Hydroelectric Turbine，用 Power Transmitter 连接。从此电力无忧。
+
+**后期**：Bioreactor 补充（用 Fibrous Pulp 或 Crab Feces 做 Biofuel Block）。
+
+<Callout type="info" title="相关攻略">
+基地选址指南（建设中）| [银矿采集指南](/guides/09-silver-farming/) | [新手第一小时](/guides/01-first-hour/)
+</Callout>

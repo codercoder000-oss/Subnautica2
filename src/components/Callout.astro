@@ -1,0 +1,31 @@
+---
+// Callout 组件：提示/警告/步骤/危险
+// 用法：<Callout type="tip">内容</Callout>
+interface Props {
+  type?: 'tip' | 'warning' | 'danger' | 'step' | 'info';
+  title?: string;
+}
+
+const { type = 'info', title } = Astro.props;
+
+const config = {
+  tip: { icon: '💡', bg: 'bg-cyan-900/20', border: 'border-cyan-700/50', titleColor: 'text-cyan-glow', defaultTitle: '提示' },
+  warning: { icon: '⚠️', bg: 'bg-yellow-900/20', border: 'border-yellow-700/50', titleColor: 'text-yellow-300', defaultTitle: '注意' },
+  danger: { icon: '🚨', bg: 'bg-red-900/20', border: 'border-red-700/50', titleColor: 'text-red-300', defaultTitle: '危险' },
+  step: { icon: '📍', bg: 'bg-blue-900/20', border: 'border-blue-700/50', titleColor: 'text-blue-300', defaultTitle: '关键步骤' },
+  info: { icon: 'ℹ️', bg: 'bg-deep-700/50', border: 'border-deep-500', titleColor: 'text-cyan-200', defaultTitle: '说明' },
+};
+
+const c = config[type];
+const displayTitle = title ?? c.defaultTitle;
+---
+
+<div class:list={['callout rounded-lg border p-4 my-4 not-prose', c.bg, c.border]}>
+  <div class:list={['flex items-center gap-2 font-semibold text-sm mb-1', c.titleColor]}>
+    <span>{c.icon}</span>
+    <span>{displayTitle}</span>
+  </div>
+  <div class="text-sm text-cyan-100/80 leading-relaxed">
+    <slot />
+  </div>
+</div>

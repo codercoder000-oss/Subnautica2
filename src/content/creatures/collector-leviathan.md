@@ -1,4 +1,4 @@
----
+﻿---
 name: 收集者利维坦
 nameEn: Collector Leviathan
 scientificName: Tyrannoteuthis phobocoeus
@@ -10,6 +10,7 @@ depthMax: 600
 biomes: [coral-gardens-deep, karakorum]
 size: leviathan
 phobiaTags: [large, jumpscare, deepdark]
+image: https://r2.wikily.gg/images/subnautica-2/icons/T_UI_Icon_Creatures_CollectorLeviathan.webp
 scannable: true
 biomod: 待数据矿工确认
 isStorySpoiler: false
@@ -53,3 +54,4 @@ verifiedAt: 2026-05-15
 - 体型在二代利维坦中属中等
 - 多在中层水域，光照尚可
 - Jump Scare 风险中等（声呐提前预警）
+

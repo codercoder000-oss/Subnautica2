@@ -2,6 +2,7 @@
 // 全站基础布局
 import { SITE, NAV } from '@/consts';
 import MobileNav from '@/components/MobileNav.astro';
+import SearchModal from '@/components/SearchModal.astro';
 import '@/styles/global.css';
 
 interface Props {
@@ -56,6 +57,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1397686696757932" crossorigin="anonymous"></script>
   </head>
   <body class="bg-deep-900 text-cyan-50 min-h-screen flex flex-col">
     <!-- 顶部导航 -->
@@ -78,16 +82,17 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
             ))}
           </ul>
         </nav>
-        <a
-          href="/search/"
-          class="hidden lg:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-deep-700 border border-deep-600 hover:border-cyan-glow hover:text-cyan-glow transition"
+        <button
+          data-open-search
+          class="hidden lg:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-deep-700 border border-deep-600 hover:border-cyan-glow hover:text-cyan-glow transition cursor-pointer"
           aria-label="搜索"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           搜索
-        </a>
+          <kbd class="text-[10px] text-cyan-200/30 ml-1">Ctrl+K</kbd>
+        </button>
         <MobileNav />
       </div>
       <!-- 版本提示条 -->
@@ -102,37 +107,52 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
       <slot />
     </main>
 
-    <!-- 页脚 -->
-    <footer class="border-t border-deep-600 bg-deep-800 mt-12">
-      <div class="max-w-7xl mx-auto px-4 py-8 text-sm text-cyan-200/60 space-y-4">
-        <div class="grid md:grid-cols-3 gap-6">
-          <div>
-            <h3 class="font-display text-cyan-glow mb-2">{SITE.title}</h3>
-            <p>{SITE.description}</p>
+    <!-- 简化页脚 -->
+    <footer class="border-t border-deep-600/50 bg-deep-800/50 mt-12">
+      <div class="max-w-7xl mx-auto px-4 py-6 text-xs text-cyan-200/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-4">
+            <span class="font-display text-cyan-glow/70">{SITE.title}</span>
+            <a href="/about/" class="hover:text-cyan-glow">关于</a>
+            <a href="/contribute/" class="hover:text-cyan-glow">贡献</a>
+            <a href="/faq/" class="hover:text-cyan-glow">FAQ</a>
           </div>
-          <div>
-            <h3 class="font-display text-cyan-glow mb-2">导航</h3>
-            <ul class="space-y-1">
-              {NAV.slice(0, 6).map((item) => (
-                <li><a href={item.href} class="hover:text-cyan-glow">{item.label}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 class="font-display text-cyan-glow mb-2">关于</h3>
-            <ul class="space-y-1">
-              <li><a href="/about/" class="hover:text-cyan-glow">站点说明</a></li>
-              <li><a href="/contribute/" class="hover:text-cyan-glow">贡献指南</a></li>
-              <li><a href="https://github.com/" class="hover:text-cyan-glow">GitHub 仓库</a></li>
-            </ul>
-          </div>
-        </div>
-        <!-- Fan-made 声明 -->
-        <div class="pt-4 border-t border-deep-600 text-xs text-cyan-200/50">
           <p>{SITE.disclaimer}</p>
-          <p class="mt-1">© {new Date().getFullYear()} {SITE.author}. 内容采用 CC BY-NC-SA 4.0 协议。</p>
         </div>
+        <p class="text-center mt-3 text-cyan-200/30">
+          © {new Date().getFullYear()} {SITE.author} · CC BY-NC-SA 4.0
+        </p>
       </div>
     </footer>
+
+    <!-- 搜索弹窗 -->
+    <SearchModal />
+
+    <!-- 返回顶部按钮 -->
+    <button
+      id="back-to-top"
+      class="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-deep-700 border border-deep-600 text-cyan-glow flex items-center justify-center opacity-0 pointer-events-none transition-all hover:bg-cyan-glow hover:text-deep-900 hover:scale-110"
+      aria-label="返回顶部"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+
+    <script>
+      const btn = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          btn?.classList.remove('opacity-0', 'pointer-events-none');
+          btn?.classList.add('opacity-100');
+        } else {
+          btn?.classList.add('opacity-0', 'pointer-events-none');
+          btn?.classList.remove('opacity-100');
+        }
+      });
+      btn?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    </script>
   </body>
 </html>

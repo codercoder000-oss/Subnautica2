@@ -1,4 +1,4 @@
----
+﻿---
 name: 髓裂者
 nameEn: Marrowbreach
 aliases: [Marrowbreach]
@@ -9,6 +9,7 @@ depthMax: 300
 biomes: [coral-gardens, karakorum]
 size: large
 phobiaTags: [jumpscare]
+image: https://r2.wikily.gg/images/subnautica-2/icons/T_Marrowbreach_Icon.webp
 scannable: true
 biomod: 待数据矿工确认
 gameVersion: EA 0.1.0
@@ -34,3 +35,4 @@ verifiedAt: 2026-05-15
 ## 提示
 
 掠食者级别的生物（区别于利维坦）**理论上可被击杀**，但二代鼓励规避而非战斗。
+

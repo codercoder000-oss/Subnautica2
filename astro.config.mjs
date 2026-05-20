@@ -5,9 +5,10 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// 站点配置：上线前把 site 改成你的正式域名
+// 站点配置：GitHub Pages 部署
 export default defineConfig({
-  site: 'https://subnautica2-guide.com',
+  site: 'https://codercoder000-oss.github.io',
+  base: '/Subnautica2/',
   integrations: [mdx(), react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

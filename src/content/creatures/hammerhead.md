@@ -1,4 +1,4 @@
----
+﻿---
 name: 锤头
 nameEn: Hammerhead
 aliases: [Hammerhead]
@@ -9,6 +9,7 @@ depthMax: 250
 biomes: [coral-gardens, karakorum]
 size: large
 phobiaTags: [large]
+image: https://r2.wikily.gg/images/subnautica-2/icons/T_Hammerhead_Icon.webp
 scannable: true
 biomod: 待数据矿工确认
 gameVersion: EA 0.1.0
@@ -33,3 +34,4 @@ verifiedAt: 2026-05-15
 ## 注意
 
 体型大但**不属于利维坦级**，理论可击杀，但不推荐——浪费时间且没有击杀奖励。
+
