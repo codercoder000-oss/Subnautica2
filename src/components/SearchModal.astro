@@ -44,8 +44,16 @@
     async function loadPagefind() {
       if (pagefind) return pagefind;
       try {
-        pagefind = await import('/pagefind/pagefind.js');
-        return pagefind;
+        // 尝试带 base 路径和不带的两种情况
+        var basePath = document.querySelector('base') ? document.querySelector('base').href : '';
+        var paths = [basePath + 'pagefind/pagefind.js', '/pagefind/pagefind.js', '/Subnautica2/pagefind/pagefind.js'];
+        for (var i = 0; i < paths.length; i++) {
+          try {
+            pagefind = await import(paths[i]);
+            return pagefind;
+          } catch(e) { continue; }
+        }
+        return null;
       } catch (e) {
         console.warn('Pagefind load failed:', e);
         return null;
